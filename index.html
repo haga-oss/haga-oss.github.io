@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entry Form | エントリーフォーム - TRYBALUNIT</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      font-size: 15px;
+    }
+
+    .header {
+      background: #1a1a2e;
+      color: white;
+      text-align: center;
+      padding: 24px 16px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 4px;
+    }
+
+    /* 進捗バー */
+    .progress-wrap {
+      background: #fff;
+      padding: 16px;
+      border-bottom: 1px solid #e0e0e0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: #999;
+    }
+
+    .progress-labels span.active {
+      color: #e63946;
+      font-weight: bold;
+    }
+
+    .progress-bar-bg {
+      background: #e0e0e0;
+      border-radius: 4px;
+      height: 6px;
+    }
+
+    .progress-bar-fill {
+      background: #e63946;
+      height: 6px;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      text-align: right;
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    /* フォーム本体 */
+    .form-container {
+      max-width: 640px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #1a1a2e;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e63946;
+    }
+
+    .step-title span {
+      font-size: 13px;
+      color: #999;
+      font-weight: normal;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    label .en {
+      font-weight: normal;
+      color: #888;
+      font-size: 12px;
+      margin-left: 6px;
+    }
+
+    label .required {
+      color: #e63946;
+      font-size: 12px;
+      margin-left: 4px;
+    }
+
+    label .optional {
+      color: #999;
+      font-size: 11px;
+      margin-left: 4px;
+      background: #f0f0f0;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #fff;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #e63946;
+      box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-row > div {
+      flex: 1;
+    }
+
+    .input-row label {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* ラジオボタン */
+    .radio-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: normal;
+      font-size: 15px;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px 16px;
+      flex: 1;
+      min-width: 100px;
+      justify-content: center;
+    }
+
+    .radio-group input[type="radio"] {
+      accent-color: #e63946;
+      width: 16px;
+      height: 16px;
+    }
+
+    .radio-group label:has(input:checked) {
+      border-color: #e63946;
+      background: #fff5f5;
+      color: #e63946;
+      font-weight: bold;
+    }
+
+    /* 日付プルダウン */
+    .date-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .date-row select {
+      flex: 1;
+    }
+
+    .date-row span {
+      font-size: 14px;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    /* 希望勤務地 */
+    .region-block {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .region-header {
+      background: #f5f5f5;
+      padding: 12px 16px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    .region-header:hover {
+      background: #ececec;
+    }
+
+    .region-header .arrow {
+      transition: transform 0.3s;
+      font-size: 12px;
+    }
+
+    .region-header.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .region-body {
+      display: none;
+      padding: 12px 16px;
+      background: #fff;
+    }
+
+    .region-body.open {
+      display: block;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .checkbox-grid label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: normal;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .checkbox-grid input[type="checkbox"] {
+      accent-color: #e63946;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ファイルアップロード */
+    .file-group {
+      background: #fafafa;
+      border: 1px dashed #ccc;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .file-group label.file-label {
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .file-note {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 8px;
+    }
+
+    .file-later {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .file-later input[type="checkbox"] {
+      accent-color: #e63946;
+      width: 15px;
+      height: 15px;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    /* 同意文 */
+    .consent-box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .consent-toggle {
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #555;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f9f9f9;
+    }
+
+    .consent-toggle:hover {
+      background: #f0f0f0;
+    }
+
+    .consent-content {
+      display: none;
+      padding: 16px;
+      font-size: 12px;
+      color: #555;
+      line-height: 1.8;
+      max-height: 300px;
+      overflow-y: auto;
+      border-top: 1px solid #eee;
+    }
+
+    .consent-content.open {
+      display: block;
+    }
+
+    .consent-content h4 {
+      font-size: 13px;
+      margin: 12px 0 4px;
+      color: #333;
+    }
+
+    .consent-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px 16px;
+      background: #fff5f5;
+      border-top: 1px solid #fdd;
+    }
+
+    .consent-check input[type="checkbox"] {
+      accent-color: #e63946;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .consent-check label {
+      font-size: 14px;
+      font-weight: normal;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* ボタン */
+    .btn-wrap {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn-prev {
+      flex: 1;
+      padding: 14px;
+      border: 2px solid #ccc;
+      background: #fff;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #666;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-next {
+      flex: 2;
+      padding: 14px;
+      background: #e63946;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-next:hover {
+      background: #c1121f;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: #1a1a2e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      letter-spacing: 1px;
+    }
+
+    .btn-submit:hover {
+      background: #0f0f1e;
+    }
+
+    /* エラー */
+    .error-msg {
+      color: #e63946;
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+
+    input.error, select.error, textarea.error {
+      border-color: #e63946;
+    }
+
+    /* 完了画面 */
+    #complete-screen {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    #complete-screen .icon {
+      font-size: 60px;
+      margin-bottom: 16px;
+    }
+
+    #complete-screen h2 {
+      font-size: 22px;
+      color: #1a1a2e;
+      margin-bottom: 12px;
+    }
+
+    #complete-screen p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    /* 送信中オーバーレイ */
+    #loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      color: white;
+      font-size: 16px;
+    }
+
+    #loading-overlay.show {
+      display: flex;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+      .input-row {
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>TRYBALUNIT ENTRY FORM</h1>
+  <p>Hello! Trybalunit entry Page!</p>
+</div>
+
+<!-- 進捗バー -->
+<div class="progress-wrap">
+  <div class="progress-labels">
+    <span id="lbl1" class="active">基本情報</span>
+    <span id="lbl2">在留情報</span>
+    <span id="lbl3">希望条件</span>
+    <span id="lbl4">書類</span>
+    <span id="lbl5">同意・送信</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressBar" style="width:20%"></div>
+  </div>
+  <div class="progress-text" id="progressText">1 / 5</div>
+</div>
+
+<div class="form-container">
+  <form id="entryForm" enctype="multipart/form-data">
+
+    <!-- ===== STEP 1: 基本情報 ===== -->
+    <div class="step active" id="step1">
+      <div class="step-title">基本情報<span>Basic Information</span></div>
+
+      <div class="form-group">
+        <label>氏名 <span class="en">Name</span><span class="required">*必須</span></label>
+        <div class="input-row">
+          <div>
+            <label>姓 Last Name</label>
+            <input type="text" id="lastName" placeholder="例）TRYBALUNIT" required>
+            <div class="error-msg" id="err-lastName">姓を入力してください</div>
+          </div>
+          <div>
+            <label>名 First Name</label>
+            <input type="text" id="firstName" placeholder="例）JOB" required>
+            <div class="error-msg" id="err-firstName">名を入力してください</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>フリガナ <span class="en">Furigana</span><span class="required">*必須</span></label>
+        <div class="input-row">
+          <div>
+            <label>セイ</label>
+            <input type="text" id="lastNameKana" placeholder="例）トライバルユニット" pattern="[ァ-ヶー　 ]+">
+            <div class="error-msg" id="err-lastNameKana">カタカナで入力してください</div>
+          </div>
+          <div>
+            <label>メイ</label>
+            <input type="text" id="firstNameKana" placeholder="例）ジョブ" pattern="[ァ-ヶー　 ]+">
+            <div class="error-msg" id="err-firstNameKana">カタカナで入力してください</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>性別 <span class="en">Gender</span><span class="required">*必須</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="gender" value="男性"> 男性 Male</label>
+          <label><input type="radio" name="gender" value="女性"> 女性 Female</label>
+          <label><input type="radio" name="gender" value="その他"> その他 Other</label>
+        </div>
+        <div class="error-msg" id="err-gender">性別を選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <label>生年月日 <span class="en">Date of Birth</span><span class="required">*必須</span></label>
+        <div class="date-row">
+          <select id="birthYear">
+            <option value="">年 Year</option>
+          </select>
+          <span>年</span>
+          <select id="birthMonth">
+            <option value="">月 Month</option>
+          </select>
+          <span>月</span>
+          <select id="birthDay">
+            <option value="">日 Day</option>
+          </select>
+          <span>日</span>
+        </div>
+        <div class="error-msg" id="err-birth">生年月日を選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <label>国籍 <span class="en">Nationality</span><span class="required">*必須</span></label>
+        <select id="nationality">
+          <option value="">-- 選択してください / Please select --</option>
+          <optgroup label="▼ よく選ばれる国籍">
+            <option>ベトナム / Vietnam</option>
+            <option>中国 / China</option>
+            <option>フィリピン / Philippines</option>
+            <option>インドネシア / Indonesia</option>
+            <option>ミャンマー / Myanmar</option>
+            <option>タイ / Thailand</option>
+            <option>ネパール / Nepal</option>
+            <option>韓国 / South Korea</option>
+          </optgroup>
+          <optgroup label="▼ アジア">
+            <option>日本 / Japan</option>
+            <option>中華民国（台湾）/ Taiwan</option>
+            <option>香港 / Hong Kong</option>
+            <option>インド / India</option>
+            <option>シンガポール / Singapore</option>
+            <option>スリランカ / Sri Lanka</option>
+            <option>マレーシア / Malaysia</option>
+            <option>パキスタン / Pakistan</option>
+            <option>バングラデシュ / Bangladesh</option>
+            <option>その他アジア / Other Asia</option>
+          </optgroup>
+          <optgroup label="▼ 北米">
+            <option>アメリカ合衆国（米国）/ USA</option>
+            <option>カナダ / Canada</option>
+            <option>メキシコ / Mexico</option>
+            <option>その他北米 / Other North America</option>
+          </optgroup>
+          <optgroup label="▼ 南米">
+            <option>アルゼンチン / Argentina</option>
+            <option>ウルグアイ / Uruguay</option>
+            <option>エクアドル / Ecuador</option>
+            <option>コロンビア / Colombia</option>
+            <option>チリ / Chile</option>
+            <option>パラグアイ / Paraguay</option>
+            <option>ブラジル / Brazil</option>
+            <option>ベネズエラ / Venezuela</option>
+            <option>ペルー / Peru</option>
+            <option>その他南米 / Other South America</option>
+          </optgroup>
+          <optgroup label="▼ ヨーロッパ">
+            <option>イギリス（英国）/ UK</option>
+            <option>アイルランド / Ireland</option>
+            <option>イタリア / Italy</option>
+            <option>ウクライナ / Ukraine</option>
+            <option>ウズベキスタン / Uzbekistan</option>
+            <option>オーストリア / Austria</option>
+            <option>オランダ / Netherlands</option>
+            <option>ギリシャ / Greece</option>
+            <option>クロアチア / Croatia</option>
+            <option>スイス / Switzerland</option>
+            <option>スウェーデン / Sweden</option>
+            <option>スペイン / Spain</option>
+            <option>デンマーク / Denmark</option>
+            <option>ドイツ / Germany</option>
+            <option>トルコ / Turkey</option>
+            <option>ノルウェー / Norway</option>
+            <option>ハンガリー / Hungary</option>
+            <option>フィンランド / Finland</option>
+            <option>フランス / France</option>
+            <option>ブルガリア / Bulgaria</option>
+            <option>ベルギー / Belgium</option>
+            <option>ポーランド / Poland</option>
+            <option>ポルトガル / Portugal</option>
+            <option>ルーマニア / Romania</option>
+            <option>ルクセンブルク / Luxembourg</option>
+            <option>ロシア / Russia</option>
+            <option>その他ヨーロッパ / Other Europe</option>
+          </optgroup>
+          <optgroup label="▼ オセアニア">
+            <option>オーストラリア / Australia</option>
+            <option>ニュージーランド / New Zealand</option>
+            <option>その他オセアニア / Other Oceania</option>
+          </optgroup>
+          <optgroup label="▼ アフリカ">
+            <option>エジプト / Egypt</option>
+            <option>エチオピア / Ethiopia</option>
+            <option>ガーナ / Ghana</option>
+            <option>カメルーン / Cameroon</option>
+            <option>ギニア / Guinea</option>
+            <option>ケニア / Kenya</option>
+            <option>コートジボワール / Côte d'Ivoire</option>
+            <option>ジンバブエ / Zimbabwe</option>
+            <option>スーダン / Sudan</option>
+            <option>セネガル / Senegal</option>
+            <option>ソマリア / Somalia</option>
+            <option>タンザニア / Tanzania</option>
+            <option>チュニジア / Tunisia</option>
+            <option>ナイジェリア / Nigeria</option>
+            <option>ナミビア / Namibia</option>
+            <option>マダガスカル / Madagascar</option>
+            <option>南アフリカ / South Africa</option>
+            <option>モザンビーク / Mozambique</option>
+            <option>モロッコ / Morocco</option>
+            <option>その他アフリカ / Other Africa</option>
+          </optgroup>
+        </select>
+        <div class="error-msg" id="err-nationality">国籍を選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <label>都道府県 <span class="en">Prefecture</span><span class="required">*必須</span></label>
+        <select id="prefecture">
+          <option value="">-- 選択してください / Please select --</option>
+          <option>北海道</option><option>青森県</option><option>岩手県</option>
+          <option>宮城県</option><option>秋田県</option><option>山形県</option>
+          <option>福島県</option><option>茨城県</option><option>栃木県</option>
+          <option>群馬県</option><option>埼玉県</option><option>千葉県</option>
+          <option>東京都</option><option>神奈川県</option><option>新潟県</option>
+          <option>富山県</option><option>石川県</option><option>福井県</option>
+          <option>山梨県</option><option>長野県</option><option>岐阜県</option>
+          <option>静岡県</option><option>愛知県</option><option>三重県</option>
+          <option>滋賀県</option><option>京都府</option><option>大阪府</option>
+          <option>兵庫県</option><option>奈良県</option><option>和歌山県</option>
+          <option>鳥取県</option><option>島根県</option><option>岡山県</option>
+          <option>広島県</option><option>山口県</option><option>徳島県</option>
+          <option>香川県</option><option>愛媛県</option><option>高知県</option>
+          <option>福岡県</option><option>佐賀県</option><option>長崎県</option>
+          <option>熊本県</option><option>大分県</option><option>宮崎県</option>
+          <option>鹿児島県</option><option>沖縄県</option>
+        </select>
+        <div class="error-msg" id="err-prefecture">都道府県を選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <label>住所詳細 <span class="en">Address</span><span class="optional">任意 Optional</span></label>
+        <input type="text" id="address" placeholder="例）東京都新宿区西新宿1丁目25-1 新宿センタービル29階">
+      </div>
+
+      <div class="form-group">
+        <label>電話番号 <span class="en">Phone Number</span><span class="required">*必須</span></label>
+        <input type="tel" id="phone" placeholder="例）090-1234-5678">
+        <div class="error-msg" id="err-phone">電話番号を入力してください</div>
+      </div>
+
+      <div class="form-group">
+        <label>メールアドレス <span class="en">Email Address</span><span class="required">*必須</span></label>
+        <input type="email" id="email" placeholder="例）sample@email.com">
+        <div class="error-msg" id="err-email">正しいメールアドレスを入力してください</div>
+      </div>
+
+      <div class="btn-wrap">
+        <button type="button" class="btn-next" onclick="goNext(1)">次へ / Next →</button>
+      </div>
+    </div>
+
+    <!-- ===== STEP 2: 在留情報 ===== -->
+    <div class="step" id="step2">
+      <div class="step-title">在留・資格情報<span>Residential Status</span></div>
+
+      <div class="form-group">
+        <label>在留資格 <span class="en">Residential Status</span><span class="required">*必須</span></label>
+        <select id="visaStatus">
+          <option value="">-- 選択してください / Please select --</option>
+          <option>技術・人文知識・国際業務</option>
+          <option>介護VISA</option>
+          <option>特定技能1号</option>
+          <option>特定技能2号</option>
+          <option>技能実習1号</option>
+          <option>技能実習2号</option>
+          <option>技能実習3号</option>
+          <option>短期滞在</option>
+          <option>留学</option>
+          <option>家族滞在</option>
+          <option>特定活動</option>
+          <option>永住者</option>
+          <option>日本人の配偶者等</option>
+          <option>永住者の配偶者等</option>
+          <option>定住者</option>
+        </select>
+        <div class="error-msg" id="err-visaStatus">在留資格を選択してください</div>
+      </div>
+
+      <div class="form-group">
+        <label>在留期限 <span class="en">Term of Stay</span><span class="required">*必須</span></label>
+        <input type="date" id="visaExpiry" min="" max="">
+        <div class="error-msg" id="err-visaExpiry">在留期限を選択してください</div>
+      </div>
+
+      <div class="btn-wrap">
+        <button type="button" class="btn-prev" onclick="goPrev(2)">← 戻る</button>
+        <button type="button" class="btn-next" onclick="goNext(2)">次へ / Next →</button>
+      </div>
+    </div>
+
+    <!-- ===== STEP 3: 希望条件 ===== -->
+    <div class="step" id="step3">
+      <div class="step-title">希望条件<span>Job Preferences</span></div>
+
+      <!-- 希望勤務地 -->
+      <div class="form-group">
+        <label>希望勤務地 <span class="en">Preferred Work Location</span><span class="required">*必須</span></label>
+
+        <div class="region-block">
+          <div class="region-header" onclick="toggleRegion(this)">北海道・東北 <span class="arrow">▼</span></div>
+          <div class="region-body">
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="workLocation" value="北海道"> 北海道</label>
+              <label><input type="checkbox" name="workLocation" value="青森県"> 青森県</label>
+              <label><input type="checkbox" name="workLocation" value="岩手県"> 岩手県</label>
+              <label><input type="checkbox" name="workLocation" value="宮城県"> 宮城県</label>
+              <label><input type="checkbox" name="workLocation" value="秋田県"> 秋田県</label>
+              <label><input type="checkbox" name="workLocation" value="山形県"> 山形県</label>
+              <label><input type="checkbox" name="workLocation" value="福島県"> 福島県</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="region-block">
+          <div class="region-header" onclick="toggleRegion(this)">関東 <span class="arrow">▼</span></div>
+          <div class="region-body">
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="workLocation" value="茨城県"> 茨城県</label>
+              <label><input type="checkbox" name="workLocation" value="栃木県"> 栃木県</label>
+              <label><input type="checkbox" name="workLocation" value="群馬県"> 群馬県</label>
+              <label><input type="checkbox" name="workLocation" value="埼玉県"> 埼玉県</label>
+              <label><input type="checkbox" name="workLocation" value="千葉県"> 千葉県</label>
+              <label><input type="checkbox" name="workLocation" value="東京都"> 東京都</label>
+              <label><input type="checkbox" name="workLocation" value="神奈川県"> 神奈川県</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="region-block">
+          <div class="region-header" onclick="toggleRegion(this)">上信越・北陸 <span class="arrow">▼</span></div>
+          <div class="region-body">
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="workLocation" value="新潟県"> 新潟県</label>
+              <label><input type="checkbox" name="workLocation" value="富山県"> 富山県</label>
+              <label><input type="checkbox" name="workLocation" value="石川県"> 石川県</label>
+              <label><input type="checkbox" name="workLocation" value="福井県"> 福井県</label>
+              <label><input type="checkbox" name="workLocation" value="山梨県"> 山梨県</label>
+              <label><input type="checkbox" name="workLocation" value="長野県"> 長野県</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="region-block">
+          <div class="region-header" onclick="toggleRegion(this)">東海 <span class="arrow">▼</span></div>
+          <div class="region-body">
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="workLocation" value="岐阜県"> 岐阜県</label>
+              <label><input type="checkbox" name="workLocation" value="静岡県"> 静岡県</label>
+              <label><input type="checkbox" name="workLocation" value="愛知県"> 愛知県</label>
+              <label><input type="checkbox" name="workLocation" value="三重県"> 三重県</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="region-block">
+          <div class="region-header" onclick="toggleRegion(this)">関西 <span class="arrow">▼</span></div>
+          <div class="region-body">
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="workLocation" value="滋賀県"> 滋賀県</label>
+              <label><input type="checkbox" name="workLocation" value="京都府"> 京都府</label>
+              <label><input type="checkbox" name="workLocation" value="大阪府"> 大阪府</label>
+              <label><input type="checkbox" name="workLocation" value="兵庫県"> 兵庫県</label>
+              <label><input type="checkbox" name="workLocation" value="奈良県"> 奈良県</label>
+              <label><input type="checkbox" name="workLocation" value="和歌山県"> 和歌山県</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="region-block">
+          <div class="region-header" onclick="toggleRegion(this)">中国 <span class="arrow">▼</span></div>
+          <div class="region-body">
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="workLocation" value="鳥取県"> 鳥取県</label>
+              <label><input type="checkbox" name="workLocation" value="島根県"> 島根県</label>
+              <label><input type="checkbox" name="workLocation" value="岡山県"> 岡山県</label>
+              <label><input type="checkbox" name="workLocation" value="広島県"> 広島県</label>
+              <label><input type="checkbox" name="workLocation" value="山口県"> 山口県</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="region-block">
+          <div class="region-header" onclick="toggleRegion(this)">四国 <span class="arrow">▼</span></div>
+          <div class="region-body">
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="workLocation" value="徳島県"> 徳島県</label>
+              <label><input type="checkbox" name="workLocation" value="香川県"> 香川県</label>
+              <label><input type="checkbox" name="workLocation" value="愛媛県"> 愛媛県</label>
+              <label><input type="checkbox" name="workLocation" value="高知県"> 高知県</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="region-block">
+          <div class="region-header" onclick="toggleRegion(this)">九州・沖縄 <span class="arrow">▼</span></div>
+          <div class="region-body">
+            <div class="checkbox-grid">
+              <label><input type="checkbox" name="workLocation" value="福岡県"> 福岡県</label>
+              <label><input type="checkbox" name="workLocation" value="佐賀県"> 佐賀県</label>
+              <label><input type="checkbox" name="workLocation" value="長崎県"> 長崎県</label>
+              <label><input type="checkbox" name="workLocation" value="熊本県"> 熊本県</label>
+              <label><input type="checkbox" name="workLocation" value="大分県"> 大分県</label>
+              <label><input type="checkbox" name="workLocation" value="宮崎県"> 宮崎県</label>
+              <label><input type="checkbox" name="workLocation" value="鹿児島県"> 鹿児島県</label>
+              <label><input type="checkbox" name="workLocation" value="沖縄県"> 沖縄県</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 未確定は常時表示 -->
+        <div style="margin-top:10px; padding:12px 16px; background:#fff; border:1px solid #e0e0e0; border-radius:8px;">
+          <label style="font-weight:normal;"><input type="checkbox" name="workLocation" value="未確定"> 未確定 / Undecided</label>
+        </div>
+
+        <div class="error-msg" id="err-workLocation">希望勤務地を1つ以上選択してください</div>
+      </div>
+
+      <!-- 希望職種 -->
+      <div class="form-group">
+        <label>希望職種 <span class="en">Desired Occupation</span><span class="required">*必須</span></label>
+        <select id="occupation">
+          <option value="">-- 選択してください / Please select --</option>
+          <optgroup label="▼ 特定技能 / Specified Skilled Worker">
+            <option>介護 / Nursing Care</option>
+            <option>ビルクリーニング / Building Cleaning</option>
+            <option>素形材・産業機械・電気電子情報関連製造業 / Manufacturing</option>
+            <option>建設 / Construction</option>
+            <option>造船・船用工業 / Shipbuilding</option>
+            <option>自動車整備 / Automobile Maintenance</option>
+            <option>航空 / Aviation</option>
+            <option>農業 / Agriculture</option>
+            <option>漁業 / Fishery</option>
+            <option>飲食料品製造業 / Food & Beverage Manufacturing</option>
+            <option>外食業 / Food Service</option>
+            <option>自動車運送業 / Road Transportation</option>
+            <option>鉄道 / Railway</option>
+            <option>林業 / Forestry</option>
+            <option>木材産業 / Wood Industry</option>
+            <option>宿泊 / Accommodation</option>
+          </optgroup>
+          <optgroup label="▼ 医療・介護・福祉 / Medical & Welfare">
+            <option>介護福祉士 / Care Worker</option>
+            <option>ケアマネージャー / Care Manager</option>
+            <option>施設管理・マネージャー（医療・介護・福祉）/ Facility Manager</option>
+            <option>看護助手 / Nursing Assistant</option>
+            <option>介護事務 / Care Administration</option>
+            <option>医療・介護・福祉その他 / Other Medical & Welfare</option>
+          </optgroup>
+          <optgroup label="▼ 飲食・フード / Food & Beverage">
+            <option>ホールスタッフ / Hall Staff</option>
+            <option>キッチンスタッフ / Kitchen Staff</option>
+            <option>ホール＋キッチン / Hall & Kitchen</option>
+            <option>店長・マネージャー（飲食）/ Restaurant Manager</option>
+            <option>飲食・フードその他 / Other F&B</option>
+          </optgroup>
+          <optgroup label="▼ サービス・警備・清掃 / Service & Security">
+            <option>清掃員・ルームメイク / Cleaner & Housekeeping</option>
+            <option>ビル・ハウスクリーニング / Building Cleaning</option>
+            <option>フロント・受付（サービス）/ Front Desk</option>
+            <option>店長・マネージャー（サービス・警備・清掃）/ Service Manager</option>
+            <option>サービス・警備・清掃その他 / Other Service</option>
+          </optgroup>
+          <optgroup label="▼ 製造・工場・倉庫 / Manufacturing & Warehouse">
+            <option>食品製造・加工・検査・梱包 / Food Processing</option>
+            <option>製品製造・加工 / Product Manufacturing</option>
+            <option>塗装・溶接・板金 / Painting & Welding</option>
+            <option>組立・検査・仕分け・ピッキング・梱包 / Assembly & Inspection</option>
+            <option>製造・工場・倉庫その他 / Other Manufacturing</option>
+          </optgroup>
+          <optgroup label="▼ IT・エンジニア / IT & Engineering">
+            <option>システムエンジニア（SE）・プログラマー / SE & Programmer</option>
+            <option>OA関連 / OA Related</option>
+            <option>ユーザーサポート / User Support</option>
+            <option>IT・エンジニアその他 / Other IT</option>
+          </optgroup>
+          <optgroup label="▼ 事務・オフィスワーク / Office Work">
+            <option>一般事務 / General Office</option>
+            <option>経理事務 / Accounting</option>
+            <option>営業事務 / Sales Admin</option>
+            <option>受付・秘書 / Reception & Secretary</option>
+            <option>貿易事務 / Trade Administration</option>
+            <option>国際事務 / International Affairs</option>
+            <option>電話対応・コールセンター / Call Center</option>
+            <option>人事・総務・法務 / HR & Legal</option>
+            <option>企画・マーケティング・広報 / Marketing & PR</option>
+            <option>保険・金融関連 / Insurance & Finance</option>
+            <option>事務・オフィスワークその他 / Other Office</option>
+          </optgroup>
+          <optgroup label="▼ その他 / Other">
+            <option>その他 / Other</option>
+          </optgroup>
+        </select>
+        <div class="error-msg" id="err-occupation">希望職種を選択してください</div>
+      </div>
+
+      <div class="btn-wrap">
+        <button type="button" class="btn-prev" onclick="goPrev(3)">← 戻る</button>
+        <button type="button" class="btn-next" onclick="goNext(3)">次へ / Next →</button>
+      </div>
+    </div>
+
+    <!-- ===== STEP 4: 書類アップロード ===== -->
+    <div class="step" id="step4">
+      <div class="step-title">書類アップロード<span>Document Upload</span></div>
+      <p style="font-size:13px; color:#888; margin-bottom:20px;">※ すべて任意です。後日担当者にお送りいただくことも可能です。<br>All documents are optional. You may send them to our staff later.</p>
+
+      <div class="file-group">
+        <label class="file-label">在留カード（表）<span class="en">Front of Resident Card</span><span class="optional">任意</span></label>
+        <p class="file-note">2MBを超える場合はスクリーンショットしてください / Max 2MB</p>
+        <input type="file" id="cardFront" accept="image/*,.pdf" onchange="handleFile(this,'cardFrontLater')">
+        <div class="file-later">
+          <input type="checkbox" id="cardFrontLater" onchange="toggleFile(this,'cardFront')">
+          <label for="cardFrontLater">後日担当者に送る / Send later</label>
+        </div>
+      </div>
+
+      <div class="file-group">
+        <label class="file-label">在留カード（裏）<span class="en">Back of Resident Card</span><span class="optional">任意</span></label>
+        <p class="file-note">2MBを超える場合はスクリーンショットしてください / Max 2MB</p>
+        <input type="file" id="cardBack" accept="image/*,.pdf" onchange="handleFile(this,'cardBackLater')">
+        <div class="file-later">
+          <input type="checkbox" id="cardBackLater" onchange="toggleFile(this,'cardBack')">
+          <label for="cardBackLater">後日担当者に送る / Send later</label>
+        </div>
+      </div>
+
+      <div class="file-group">
+        <label class="file-label">日本語能力試験証明書（JLPT）<span class="optional">任意</span></label>
+        <p class="file-note">2MBを超える場合はスクリーンショットしてください / Max 2MB</p>
+        <div style="margin-bottom:8px;">
+          <label style="font-weight:normal; font-size:13px;">
+            <input type="checkbox" id="noJlpt" onchange="toggleFile(this,'jlpt')"> 未取得 / Not obtained
+          </label>
+        </div>
+        <input type="file" id="jlpt" accept="image/*,.pdf">
+      </div>
+
+      <div class="file-group">
+        <label class="file-label">特定技能評価証明書<span class="optional">任意</span></label>
+        <p class="file-note">2MBを超える場合はスクリーンショットしてください / Max 2MB</p>
+        <div style="margin-bottom:8px;">
+          <label style="font-weight:normal; font-size:13px;">
+            <input type="checkbox" id="noSsw" onchange="toggleFile(this,'ssw')"> 未取得 / Not obtained
+          </label>
+        </div>
+        <input type="file" id="ssw" accept="image/*,.pdf">
+      </div>
+
+      <div class="file-group">
+        <label class="file-label">履歴書 <span class="en">Resume</span><span class="optional">任意</span></label>
+        <p class="file-note">2MBを超える場合はスクリーンショットしてください / Max 2MB</p>
+        <input type="file" id="resume" accept="image/*,.pdf,.doc,.docx" onchange="handleFile(this,'resumeLater')">
+        <div class="file-later">
+          <input type="checkbox" id="resumeLater" onchange="toggleFile(this,'resume')">
+          <label for="resumeLater">後日担当者に送る / Send later</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>その他・備考 <span class="en">Other / Notes</span><span class="optional">任意</span></label>
+        <textarea id="notes" rows="4" placeholder="希望事項・連絡事項があればご記入ください / Please enter any requests or notes"></textarea>
+      </div>
+
+      <div class="btn-wrap">
+        <button type="button" class="btn-prev" onclick="goPrev(4)">← 戻る</button>
+        <button type="button" class="btn-next" onclick="goNext(4)">次へ / Next →</button>
+      </div>
+    </div>
+
+    <!-- ===== STEP 5: 同意・送信 ===== -->
+    <div class="step" id="step5">
+      <div class="step-title">個人情報の取扱い・送信<span>Privacy Policy & Submit</span></div>
+
+      <div class="consent-box">
+        <div class="consent-toggle" onclick="toggleConsent()">
+          ▼ 個人情報の取扱いについて詳細を確認する / View Privacy Policy
+        </div>
+        <div class="consent-content" id="consentContent">
+          <h4>提供するサービスの概要</h4>
+          <p>人材派遣事業、BPO事業、オフィスリースサポート事業、システム開発・販売事業</p>
+
+          <h4>取得する個人情報とその取得方法</h4>
+          <p>ア. 顧客情報（会社名、部署名、氏名、住所、電話番号、メールアドレスなど）<br>
+          イ. 従業者情報（氏名、年齢、住所、電話番号、職歴、家族構成など）<br>
+          ウ. 従業者などの個人番号<br>
+          エ. 求人応募者情報（氏名、年齢、住所、電話番号、メールアドレス、職歴など）</p>
+
+          <h4>個人情報の利用目的</h4>
+          <p>（求人、派遣登録応募者情報）採用活動に利用</p>
+          <p>なお、予め明示・公表した利用目的の範囲を超えてご依頼者等の個人情報を利用する必要が生じた場合は、ご依頼者等にその旨をご連絡し、同意をいただいた上で利用します。</p>
+
+          <h4>個人情報の提供</h4>
+          <p>当社は、次の場合を除き、ご依頼者の個人情報を第三者に開示または提供しません。<br>
+          1) ご依頼者の同意がある場合 / 2) 法令に基づく場合 / 3) 人の生命・身体・財産の保護に必要な場合 / 4) 利用目的達成に必要な範囲で委託する場合 / 5) 事業承継が行われる場合</p>
+
+          <h4>個人情報に関するお問合せ</h4>
+          <p>株式会社トライバルユニット<br>
+          個人情報保護管理者：小山 篤<br>
+          TEL：011-200-5111<br>
+          Mail: info@trybalunit.com<br><br>
+          【認定団体苦情相談窓口】一般財団法人日本情報経済社会推進協会<br>
+          〒106-0032 東京都港区六本木一丁目9番9号 六本木ファーストビル内<br>
+          TEL: 03-5860-7565（平日 9:30〜12:00 / 13:00〜16:30）<br><br>
+          株式会社トライバルユニット<br>
+          北海道札幌市中央区北一条西3丁目3番地1<br>
+          代表取締役社長 田中 智幸<br>
+          最終更新：2024年9月1日</p>
+        </div>
+        <div class="consent-check">
+          <input type="checkbox" id="consentCheck">
+          <label for="consentCheck">個人情報の取扱いに同意する<br><small>I agree to the handling of personal information</small></label>
+        </div>
+      </div>
+      <div class="error-msg" id="err-consent">同意にチェックを入れてください</div>
+
+      <button type="button" class="btn-submit" onclick="submitForm()">
+        エントリーする / Submit Entry
+      </button>
+
+      <div class="btn-wrap" style="margin-top:12px;">
+        <button type="button" class="btn-prev" onclick="goPrev(5)">← 戻る / Back</button>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- 完了画面 -->
+  <div id="complete-screen">
+    <div class="icon">✅</div>
+    <h2>エントリーが完了しました！<br><small style="font-size:16px;">Entry Complete!</small></h2>
+    <p>ご応募ありがとうございます。<br>担当者より近日中にご連絡いたします。<br><br>
+    Thank you for your application.<br>Our staff will contact you shortly.</p>
+  </div>
+</div>
+
+<!-- 送信中オーバーレイ -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>送信中... / Submitting...</p>
+</div>
+
+<script>
+  // ===== 設定 =====
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpJ2yqILVauYDq3ZnuXW_qhL9T5p1ZoZ-OhFkzwJPmIM0aBZouqKx5DGOIDDyC6O9cvg/exec';
+  let currentStep = 1;
+  const totalSteps = 5;
+
+  // ===== 生年月日プルダウン初期化 =====
+  window.onload = function() {
+    const yearSel = document.getElementById('birthYear');
+    for (let y = 2005; y >= 1950; y--) {
+      yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+    }
+    const monthSel = document.getElementById('birthMonth');
+    for (let m = 1; m <= 12; m++) {
+      monthSel.innerHTML += `<option value="${String(m).padStart(2,'0')}">${String(m).padStart(2,'0')}</option>`;
+    }
+    const daySel = document.getElementById('birthDay');
+    for (let d = 1; d <= 31; d++) {
+      daySel.innerHTML += `<option value="${String(d).padStart(2,'0')}">${String(d).padStart(2,'0')}</option>`;
+    }
+
+    // 在留期限の最小日付を今日に設定
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('visaExpiry').min = today;
+  };
+
+  // ===== 進捗バー更新 =====
+  function updateProgress(step) {
+    const pct = (step / totalSteps) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent = step + ' / ' + totalSteps;
+    for (let i = 1; i <= totalSteps; i++) {
+      const lbl = document.getElementById('lbl' + i);
+      lbl.classList.toggle('active', i === step);
+    }
+  }
+
+  // ===== ステップ移動 =====
+  function goNext(step) {
+    if (!validateStep(step)) return;
+    document.getElementById('step' + step).classList.remove('active');
+    currentStep = step + 1;
+    document.getElementById('step' + currentStep).classList.add('active');
+    updateProgress(currentStep);
+    window.scrollTo(0, 0);
+  }
+
+  function goPrev(step) {
+    document.getElementById('step' + step).classList.remove('active');
+    currentStep = step - 1;
+    document.getElementById('step' + currentStep).classList.add('active');
+    updateProgress(currentStep);
+    window.scrollTo(0, 0);
+  }
+
+  // ===== バリデーション =====
+  function validateStep(step) {
+    let valid = true;
+
+    if (step === 1) {
+      valid = checkRequired('lastName', 'err-lastName') && valid;
+      valid = checkRequired('firstName', 'err-firstName') && valid;
+      valid = checkKana('lastNameKana', 'err-lastNameKana') && valid;
+      valid = checkKana('firstNameKana', 'err-firstNameKana') && valid;
+      valid = checkRadio('gender', 'err-gender') && valid;
+      valid = checkDate() && valid;
+      valid = checkSelect('nationality', 'err-nationality') && valid;
+      valid = checkSelect('prefecture', 'err-prefecture') && valid;
+      valid = checkRequired('phone', 'err-phone') && valid;
+      valid = checkEmail('email', 'err-email') && valid;
+    }
+
+    if (step === 2) {
+      valid = checkSelect('visaStatus', 'err-visaStatus') && valid;
+      valid = checkRequired('visaExpiry', 'err-visaExpiry') && valid;
+    }
+
+    if (step === 3) {
+      valid = checkCheckboxGroup('workLocation', 'err-workLocation') && valid;
+      valid = checkSelect('occupation', 'err-occupation') && valid;
+    }
+
+    if (step === 5) {
+      if (!document.getElementById('consentCheck').checked) {
+        showError('err-consent');
+        valid = false;
+      } else {
+        hideError('err-consent');
+      }
+    }
+
+    return valid;
+  }
+
+  function checkRequired(id, errId) {
+    const val = document.getElementById(id).value.trim();
+    if (!val) { showError(errId); document.getElementById(id).classList.add('error'); return false; }
+    hideError(errId); document.getElementById(id).classList.remove('error'); return true;
+  }
+
+  function checkKana(id, errId) {
+    const val = document.getElementById(id).value.trim();
+    const kanaPattern = /^[ァ-ヶー\s　]*$/;
+    if (!val) { showError(errId); return false; }
+    if (!kanaPattern.test(val)) { showError(errId); return false; }
+    hideError(errId); return true;
+  }
+
+  function checkRadio(name, errId) {
+    const checked = document.querySelector(`input[name="${name}"]:checked`);
+    if (!checked) { showError(errId); return false; }
+    hideError(errId); return true;
+  }
+
+  function checkDate() {
+    const y = document.getElementById('birthYear').value;
+    const m = document.getElementById('birthMonth').value;
+    const d = document.getElementById('birthDay').value;
+    if (!y || !m || !d) { showError('err-birth'); return false; }
+    hideError('err-birth'); return true;
+  }
+
+  function checkSelect(id, errId) {
+    const val = document.getElementById(id).value;
+    if (!val) { showError(errId); document.getElementById(id).classList.add('error'); return false; }
+    hideError(errId); document.getElementById(id).classList.remove('error'); return true;
+  }
+
+  function checkEmail(id, errId) {
+    const val = document.getElementById(id).value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!val || !emailPattern.test(val)) { showError(errId); return false; }
+    hideError(errId); return true;
+  }
+
+  function checkCheckboxGroup(name, errId) {
+    const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+    if (checked.length === 0) { showError(errId); return false; }
+    hideError(errId); return true;
+  }
+
+  function showError(id) { document.getElementById(id).classList.add('show'); }
+  function hideError(id) { document.getElementById(id).classList.remove('show'); }
+
+  // ===== 折りたたみ（勤務地） =====
+  function toggleRegion(header) {
+    header.classList.toggle('open');
+    const body = header.nextElementSibling;
+    body.classList.toggle('open');
+  }
+
+  // ===== 同意文折りたたみ =====
+  function toggleConsent() {
+    document.getElementById('consentContent').classList.toggle('open');
+  }
+
+  // ===== ファイル制御 =====
+  function toggleFile(checkbox, fileId) {
+    const fileInput = document.getElementById(fileId);
+    fileInput.disabled = checkbox.checked;
+    if (checkbox.checked) fileInput.value = '';
+  }
+
+  function handleFile(input, laterCheckboxId) {
+    if (input.files[0] && input.files[0].size > 2 * 1024 * 1024) {
+      alert('ファイルサイズが2MBを超えています。スクリーンショットして再度アップロードしてください。\nFile size exceeds 2MB. Please screenshot and re-upload.');
+      input.value = '';
+    }
+  }
+
+  // ===== フォーム送信 =====
+  async function submitForm() {
+    if (!validateStep(5)) return;
+
+    document.getElementById('loading-overlay').classList.add('show');
+
+    const workLocations = Array.from(
+      document.querySelectorAll('input[name="workLocation"]:checked')
+    ).map(cb => cb.value).join('、');
+
+    const formData = new FormData();
+    formData.append('lastName',     document.getElementById('lastName').value);
+    formData.append('firstName',    document.getElementById('firstName').value);
+    formData.append('lastNameKana', document.getElementById('lastNameKana').value);
+    formData.append('firstNameKana',document.getElementById('firstNameKana').value);
+    formData.append('gender',       document.querySelector('input[name="gender"]:checked')?.value || '');
+    formData.append('birthDate',    `${document.getElementById('birthYear').value}/${document.getElementById('birthMonth').value}/${document.getElementById('birthDay').value}`);
+    formData.append('nationality',  document.getElementById('nationality').value);
+    formData.append('prefecture',   document.getElementById('prefecture').value);
+    formData.append('address',      document.getElementById('address').value);
+    formData.append('phone',        document.getElementById('phone').value);
+    formData.append('email',        document.getElementById('email').value);
+    formData.append('visaStatus',   document.getElementById('visaStatus').value);
+    formData.append('visaExpiry',   document.getElementById('visaExpiry').value);
+    formData.append('workLocation', workLocations);
+    formData.append('occupation',   document.getElementById('occupation').value);
+    formData.append('notes',        document.getElementById('notes').value);
+
+    // ファイル添付
+    const fileFields = ['cardFront','cardBack','jlpt','ssw','resume'];
+    fileFields.forEach(id => {
+      const input = document.getElementById(id);
+      if (input && input.files[0]) formData.append(id, input.files[0]);
+    });
+
+    try {
+      await fetch(GAS_URL, { method: 'POST', body: formData });
+      document.getElementById('loading-overlay').classList.remove('show');
+      document.getElementById('entryForm').style.display = 'none';
+      document.getElementById('complete-screen').style.display = 'block';
+      window.scrollTo(0, 0);
+    } catch (e) {
+      document.getElementById('loading-overlay').classList.remove('show');
+      alert('送信に失敗しました。時間をおいて再度お試しください。\nSubmission failed. Please try again later.');
+    }
+  }
+</script>
+</body>
+</html>
