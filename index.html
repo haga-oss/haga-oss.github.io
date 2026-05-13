@@ -11,8 +11,6 @@
     .logo { text-align: center; padding: 24px 0 8px; }
     .logo h1 { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: #1a1a1a; }
     .logo p { font-size: 12px; color: #888; margin-top: 4px; }
-
-    /* Progress Bar */
     .progress-wrap { margin: 20px 0 28px; }
     .progress-label { font-size: 12px; color: #888; text-align: right; margin-bottom: 6px; }
     .progress-bar-bg { background: #e0e0e0; border-radius: 8px; height: 8px; }
@@ -20,17 +18,12 @@
     .step-labels { display: flex; justify-content: space-between; margin-top: 8px; }
     .step-labels span { font-size: 10px; color: #aaa; }
     .step-labels span.active { color: #e63329; font-weight: 700; }
-
-    /* Card */
     .card { background: #fff; border-radius: 12px; padding: 28px 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
     .card h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: #1a1a1a; }
     .card h2 span { font-size: 13px; font-weight: 400; color: #888; margin-left: 8px; }
     .card p.desc { font-size: 12px; color: #999; margin-bottom: 20px; }
-
-    /* Form Elements */
     .form-row { display: flex; gap: 12px; margin-bottom: 18px; }
     .form-group { flex: 1; display: flex; flex-direction: column; }
-    .form-group.full { flex: 100%; }
     label { font-size: 12px; color: #555; margin-bottom: 5px; }
     label .req { color: #e63329; margin-left: 3px; }
     label .opt { color: #aaa; font-size: 11px; margin-left: 4px; }
@@ -47,8 +40,6 @@
       font-size: 13px; color: #333; cursor: pointer; margin-bottom: 0;
     }
     input[type="radio"], input[type="checkbox"] { accent-color: #e63329; width: 16px; height: 16px; }
-
-    /* File Upload */
     .file-block { background: #fafafa; border: 1.5px dashed #ddd; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
     .file-block label.title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 10px; display: block; }
     .file-input-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -58,38 +49,29 @@
       padding: 8px 16px; font-size: 13px; cursor: pointer; white-space: nowrap;
     }
     .file-btn:hover { background: #c0281f; }
+    .file-btn:disabled { background: #aaa; cursor: not-allowed; }
     .file-name { font-size: 12px; color: #888; }
-    .later-check { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: #888; }
-
-    /* Consent */
+    .later-check { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: #555; }
+    .later-check label { margin-bottom: 0; font-size: 12px; color: #555; }
     .consent-box { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; padding: 16px; font-size: 12px; color: #555; line-height: 1.7; max-height: 200px; overflow-y: auto; margin-bottom: 16px; }
     .consent-check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
     .consent-check input { margin-top: 2px; flex-shrink: 0; }
-
-    /* Buttons */
     .btn-wrap { display: flex; gap: 12px; margin-top: 28px; }
     .btn-next { flex: 1; background: #e63329; color: #fff; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; }
     .btn-next:hover { background: #c0281f; }
     .btn-back { background: #f0f0f0; color: #555; border: none; border-radius: 10px; padding: 14px 20px; font-size: 14px; cursor: pointer; }
     .btn-back:hover { background: #e0e0e0; }
-
-    /* Error */
     .error-msg { color: #e63329; font-size: 11px; margin-top: 4px; display: none; }
     .field-error input, .field-error select, .field-error textarea { border-color: #e63329; }
     .field-error .error-msg { display: block; }
-
-    /* Complete */
     #complete-screen { display: none; text-align: center; padding: 60px 20px; }
     #complete-screen h2 { font-size: 22px; color: #e63329; margin-bottom: 16px; }
     #complete-screen p { color: #555; font-size: 14px; line-height: 1.8; }
-
-    /* Loading */
     #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
     #loading-overlay.show { display: flex; }
     .spinner { width: 40px; height: 40px; border: 4px solid #fff3; border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     #loading-overlay p { color: #fff; font-size: 14px; }
-
     @media (max-width: 480px) {
       .form-row { flex-direction: column; gap: 0; }
       .card { padding: 20px 16px; }
@@ -382,15 +364,19 @@
     <!-- STEP 4 書類アップロード -->
     <div class="card step-card" id="step4" style="display:none">
       <h2>書類アップロード <span>Document Upload</span></h2>
-      <p class="desc">各書類を添付してください。後日提出可能な書類は「後日送付」を選択してください。<br>ファイルサイズ上限：2MB / Max file size: 2MB</p>
+      <p class="desc">各書類を添付してください。ファイルサイズ上限：2MB / Max file size: 2MB</p>
 
       <!-- 在留カード表 -->
       <div class="file-block">
         <label class="title">在留カード（表） Residence Card Front <span class="req">※</span></label>
         <div class="file-input-wrap">
-          <button type="button" class="file-btn" onclick="document.getElementById('cardFront').click()">ファイルを選択</button>
+          <button type="button" class="file-btn" id="btn-cardFront" onclick="document.getElementById('cardFront').click()">ファイルを選択</button>
           <input type="file" id="cardFront" accept="image/*,.pdf" onchange="showFileName(this,'cardFront-name')">
           <span class="file-name" id="cardFront-name">未選択</span>
+        </div>
+        <div class="later-check">
+          <input type="checkbox" id="cardFront_later" onchange="toggleOption('cardFront','cardFront_later','後日送付')">
+          <label for="cardFront_later">後日送付 / Send later</label>
         </div>
       </div>
 
@@ -398,9 +384,13 @@
       <div class="file-block">
         <label class="title">在留カード（裏） Residence Card Back <span class="req">※</span></label>
         <div class="file-input-wrap">
-          <button type="button" class="file-btn" onclick="document.getElementById('cardBack').click()">ファイルを選択</button>
+          <button type="button" class="file-btn" id="btn-cardBack" onclick="document.getElementById('cardBack').click()">ファイルを選択</button>
           <input type="file" id="cardBack" accept="image/*,.pdf" onchange="showFileName(this,'cardBack-name')">
           <span class="file-name" id="cardBack-name">未選択</span>
+        </div>
+        <div class="later-check">
+          <input type="checkbox" id="cardBack_later" onchange="toggleOption('cardBack','cardBack_later','後日送付')">
+          <label for="cardBack_later">後日送付 / Send later</label>
         </div>
       </div>
 
@@ -408,13 +398,17 @@
       <div class="file-block">
         <label class="title">JLPT日本語能力試験 証明書 <span class="opt">任意</span></label>
         <div class="file-input-wrap">
-          <button type="button" class="file-btn" onclick="document.getElementById('jlpt').click()">ファイルを選択</button>
+          <button type="button" class="file-btn" id="btn-jlpt" onclick="document.getElementById('jlpt').click()">ファイルを選択</button>
           <input type="file" id="jlpt" accept="image/*,.pdf" onchange="showFileName(this,'jlpt-name')">
           <span class="file-name" id="jlpt-name">未選択</span>
         </div>
         <div class="later-check">
-          <input type="checkbox" id="jlpt_later" onchange="toggleLater('jlpt','jlpt_later')">
+          <input type="checkbox" id="jlpt_later" onchange="toggleOption('jlpt','jlpt_later','後日送付')">
           <label for="jlpt_later">後日送付 / Send later</label>
+        </div>
+        <div class="later-check">
+          <input type="checkbox" id="jlpt_none" onchange="toggleOption('jlpt','jlpt_none','未取得')">
+          <label for="jlpt_none">未取得 / Not obtained</label>
         </div>
       </div>
 
@@ -422,13 +416,17 @@
       <div class="file-block">
         <label class="title">特定技能評価証明書 SSW Certificate <span class="opt">任意</span></label>
         <div class="file-input-wrap">
-          <button type="button" class="file-btn" onclick="document.getElementById('ssw').click()">ファイルを選択</button>
+          <button type="button" class="file-btn" id="btn-ssw" onclick="document.getElementById('ssw').click()">ファイルを選択</button>
           <input type="file" id="ssw" accept="image/*,.pdf" onchange="showFileName(this,'ssw-name')">
           <span class="file-name" id="ssw-name">未選択</span>
         </div>
         <div class="later-check">
-          <input type="checkbox" id="ssw_later" onchange="toggleLater('ssw','ssw_later')">
+          <input type="checkbox" id="ssw_later" onchange="toggleOption('ssw','ssw_later','後日送付')">
           <label for="ssw_later">後日送付 / Send later</label>
+        </div>
+        <div class="later-check">
+          <input type="checkbox" id="ssw_none" onchange="toggleOption('ssw','ssw_none','未取得')">
+          <label for="ssw_none">未取得 / Not obtained</label>
         </div>
       </div>
 
@@ -436,9 +434,13 @@
       <div class="file-block">
         <label class="title">履歴書 Resume / CV <span class="req">※</span></label>
         <div class="file-input-wrap">
-          <button type="button" class="file-btn" onclick="document.getElementById('resume').click()">ファイルを選択</button>
+          <button type="button" class="file-btn" id="btn-resume" onclick="document.getElementById('resume').click()">ファイルを選択</button>
           <input type="file" id="resume" accept="image/*,.pdf" onchange="showFileName(this,'resume-name')">
           <span class="file-name" id="resume-name">未選択</span>
+        </div>
+        <div class="later-check">
+          <input type="checkbox" id="resume_later" onchange="toggleOption('resume','resume_later','後日送付')">
+          <label for="resume_later">後日送付 / Send later</label>
         </div>
       </div>
 
@@ -493,7 +495,6 @@
 
   </form>
 
-  <!-- 完了画面 -->
   <div id="complete-screen">
     <h2>✅ 送信完了 / Submitted!</h2>
     <p>エントリーいただきありがとうございます。<br>
@@ -508,6 +509,15 @@
 
   let currentStep = 1;
   const totalSteps = 5;
+
+  // 各フィールドの現在の選択状態を管理
+  const fieldStatus = {
+    cardFront: 'none',
+    cardBack:  'none',
+    jlpt:      'none',
+    ssw:       'none',
+    resume:    'none'
+  };
 
   function updateProgress(step) {
     document.getElementById('progress-fill').style.width = (step / totalSteps * 100) + '%';
@@ -529,27 +539,45 @@
         return;
       }
       span.textContent = file.name;
+      // ファイルが選択されたらチェックボックスを全解除
+      const fieldId = input.id;
+      ['_later','_none'].forEach(suffix => {
+        const chk = document.getElementById(fieldId + suffix);
+        if (chk) chk.checked = false;
+      });
+      fieldStatus[fieldId] = 'file';
     } else {
       span.textContent = '未選択';
+      fieldStatus[input.id] = 'none';
     }
   }
 
-  function toggleLater(fieldId, checkId) {
-    const checked = document.getElementById(checkId).checked;
+  function toggleOption(fieldId, checkId, statusValue) {
+    const thisChk = document.getElementById(checkId);
     const fileInput = document.getElementById(fieldId);
-    const btn = fileInput.previousElementSibling;
+    const btn = document.getElementById('btn-' + fieldId);
     const nameSpan = document.getElementById(fieldId + '-name');
-    if (checked) {
+
+    if (thisChk.checked) {
+      // 他のチェックボックスを解除（later/none の排他制御）
+      ['_later','_none'].forEach(suffix => {
+        const otherId = fieldId + suffix;
+        if (otherId !== checkId) {
+          const other = document.getElementById(otherId);
+          if (other) other.checked = false;
+        }
+      });
+      // ファイル入力を無効化
       fileInput.value = '';
-      nameSpan.textContent = '後日送付';
       fileInput.disabled = true;
       btn.disabled = true;
-      btn.style.background = '#aaa';
+      nameSpan.textContent = statusValue;
+      fieldStatus[fieldId] = statusValue === '後日送付' ? 'later' : 'none_cert';
     } else {
       fileInput.disabled = false;
       btn.disabled = false;
-      btn.style.background = '#e63329';
       nameSpan.textContent = '未選択';
+      fieldStatus[fieldId] = 'none';
     }
   }
 
@@ -568,9 +596,9 @@
 
     if (step === 1) {
       ['lastName','firstName','lastNameKana','firstNameKana','birthDate','nationality','prefecture','phone','email'].forEach(clearError);
-      if (!val('lastName')) setError('lastName');
-      if (!val('firstName')) setError('firstName');
-      if (!val('lastNameKana')) setError('lastNameKana');
+      if (!val('lastName'))      setError('lastName');
+      if (!val('firstName'))     setError('firstName');
+      if (!val('lastNameKana'))  setError('lastNameKana');
       if (!val('firstNameKana')) setError('firstNameKana');
       if (!document.querySelector('input[name="gender"]:checked')) {
         document.getElementById('g-gender').classList.add('field-error');
@@ -580,10 +608,10 @@
         document.getElementById('g-gender').classList.remove('field-error');
         document.getElementById('err-gender').style.display = 'none';
       }
-      if (!val('birthDate')) setError('birthDate');
-      if (!val('nationality')) setError('nationality');
-      if (!val('prefecture')) setError('prefecture');
-      if (!val('phone')) setError('phone');
+      if (!val('birthDate'))    setError('birthDate');
+      if (!val('nationality'))  setError('nationality');
+      if (!val('prefecture'))   setError('prefecture');
+      if (!val('phone'))        setError('phone');
       const emailVal = val('email');
       if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) setError('email');
     }
@@ -641,7 +669,7 @@
 
   function fileToBase64(file) {
     return new Promise((resolve) => {
-      if (!file || file.disabled) { resolve(null); return; }
+      if (!file) { resolve(null); return; }
       const reader = new FileReader();
       reader.onload = (e) => resolve(e.target.result.split(',')[1]);
       reader.onerror = () => resolve(null);
@@ -657,19 +685,9 @@
       .map(cb => cb.value).join('、');
 
     const fileFields = ['cardFront', 'cardBack', 'jlpt', 'ssw', 'resume'];
-    const fileData = {};
-    for (const id of fileFields) {
-      const inp = document.getElementById(id);
-      if (inp && !inp.disabled && inp.files && inp.files[0]) {
-        fileData[id] = {
-          data: await fileToBase64(inp.files[0]),
-          name: inp.files[0].name,
-          type: inp.files[0].type
-        };
-      }
-    }
-
     const formData = new FormData();
+
+    // テキスト項目
     formData.append('lastName',       document.getElementById('lastName').value);
     formData.append('firstName',      document.getElementById('firstName').value);
     formData.append('lastNameKana',   document.getElementById('lastNameKana').value);
@@ -687,18 +705,26 @@
     formData.append('occupation',     document.getElementById('occupation').value);
     formData.append('notes',          document.getElementById('notes').value);
 
-    fileFields.forEach(id => {
-      if (fileData[id]) {
-        formData.append(id + '_data', fileData[id].data);
-        formData.append(id + '_name', fileData[id].name);
-        formData.append(id + '_type', fileData[id].type);
-      } else {
-        const laterChk = document.getElementById(id + '_later');
-        if (laterChk && laterChk.checked) {
-          formData.append(id + '_later', 'true');
+    // ファイル項目
+    for (const id of fileFields) {
+      const inp = document.getElementById(id);
+      const laterChk = document.getElementById(id + '_later');
+      const noneChk  = document.getElementById(id + '_none');
+
+      if (inp && !inp.disabled && inp.files && inp.files[0]) {
+        // ファイルあり → Base64変換して送信
+        const base64 = await fileToBase64(inp.files[0]);
+        if (base64) {
+          formData.append(id + '_data', base64);
+          formData.append(id + '_name', inp.files[0].name);
+          formData.append(id + '_type', inp.files[0].type);
         }
+      } else if (laterChk && laterChk.checked) {
+        formData.append(id + '_later', 'true');
+      } else if (noneChk && noneChk.checked) {
+        formData.append(id + '_none', 'true');
       }
-    });
+    }
 
     try {
       await fetch(GAS_URL, { method: 'POST', body: formData });
