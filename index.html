@@ -44,10 +44,7 @@
     .file-block label.title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 10px; display: block; }
     .file-input-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .file-input-wrap input[type="file"] { display: none; }
-    .file-btn {
-      background: #e63329; color: #fff; border: none; border-radius: 8px;
-      padding: 8px 16px; font-size: 13px; cursor: pointer; white-space: nowrap;
-    }
+    .file-btn { background: #e63329; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; white-space: nowrap; }
     .file-btn:hover { background: #c0281f; }
     .file-btn:disabled { background: #aaa; cursor: not-allowed; }
     .file-name { font-size: 12px; color: #888; }
@@ -74,10 +71,7 @@
     .spinner { width: 40px; height: 40px; border: 4px solid #fff3; border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     #loading-overlay p { color: #fff; font-size: 14px; }
-    @media (max-width: 480px) {
-      .form-row { flex-direction: column; gap: 0; }
-      .card { padding: 20px 16px; }
-    }
+    @media (max-width: 480px) { .form-row { flex-direction: column; gap: 0; } .card { padding: 20px 16px; } }
   </style>
 </head>
 <body>
@@ -190,7 +184,7 @@
 
       <div class="form-row">
         <div class="form-group" id="g-prefecture">
-          <label>都道府県 Prefecture <span class="req">※</span></label>
+          <label>現住所 都道府県 Prefecture <span class="req">※</span></label>
           <select id="prefecture">
             <option value="">選択 / Select</option>
             <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option>
@@ -276,20 +270,42 @@
       <h2>希望条件 <span>Job Preferences</span></h2>
       <p class="desc">希望する勤務地と職種を選択してください</p>
 
-      <div class="form-group" id="g-workLocation" style="margin-bottom:18px">
-        <label>希望勤務地 Preferred Location <span class="req">※</span></label>
+      <!-- 希望勤務地（地方ブロック） -->
+      <div class="form-group" id="g-workRegion" style="margin-bottom:18px">
+        <label>希望勤務地（地方） Preferred Region <span class="req">※</span></label>
         <div class="check-group" style="margin-top:8px">
-          <label><input type="checkbox" name="workLocation" value="北海道・東北"> 北海道・東北</label>
-          <label><input type="checkbox" name="workLocation" value="関東"> 関東</label>
-          <label><input type="checkbox" name="workLocation" value="中部・東海"> 中部・東海</label>
-          <label><input type="checkbox" name="workLocation" value="関西"> 関西</label>
-          <label><input type="checkbox" name="workLocation" value="中国・四国"> 中国・四国</label>
-          <label><input type="checkbox" name="workLocation" value="九州・沖縄"> 九州・沖縄</label>
-          <label><input type="checkbox" name="workLocation" value="未定"> 未定</label>
+          <label><input type="checkbox" name="workRegion" value="北海道・東北"> 北海道・東北</label>
+          <label><input type="checkbox" name="workRegion" value="関東"> 関東</label>
+          <label><input type="checkbox" name="workRegion" value="中部・東海"> 中部・東海</label>
+          <label><input type="checkbox" name="workRegion" value="関西"> 関西</label>
+          <label><input type="checkbox" name="workRegion" value="中国・四国"> 中国・四国</label>
+          <label><input type="checkbox" name="workRegion" value="九州・沖縄"> 九州・沖縄</label>
+          <label><input type="checkbox" name="workRegion" value="未定"> 未定</label>
         </div>
-        <span class="error-msg" id="err-workLocation">希望勤務地を選択してください</span>
+        <span class="error-msg" id="err-workRegion">希望勤務地を選択してください</span>
       </div>
 
+      <!-- 希望勤務地（都道府県） -->
+      <div class="form-group" id="g-workPrefecture" style="margin-bottom:18px">
+        <label>希望勤務地（都道府県） Preferred Prefecture <span class="opt">任意</span></label>
+        <select id="workPrefecture">
+          <option value="">選択 / Select（未定の場合は空欄可）</option>
+          <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option>
+          <option>秋田県</option><option>山形県</option><option>福島県</option><option>茨城県</option>
+          <option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option>
+          <option>東京都</option><option>神奈川県</option><option>新潟県</option><option>富山県</option>
+          <option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option>
+          <option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option>
+          <option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option>
+          <option>奈良県</option><option>和歌山県</option><option>鳥取県</option><option>島根県</option>
+          <option>岡山県</option><option>広島県</option><option>山口県</option><option>徳島県</option>
+          <option>香川県</option><option>愛媛県</option><option>高知県</option><option>福岡県</option>
+          <option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option>
+          <option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
+        </select>
+      </div>
+
+      <!-- 希望職種 -->
       <div class="form-group" id="g-occupation" style="margin-bottom:18px">
         <label>希望職種 Preferred Job <span class="req">※</span></label>
         <select id="occupation">
@@ -542,30 +558,25 @@
         return;
       }
       span.textContent = file.name;
-      // ファイル選択時はチェックボックスを全解除
       const fieldId = input.id;
       ['_later', '_none'].forEach(suffix => {
         const chk = document.getElementById(fieldId + suffix);
-        if (chk) {
-          chk.checked = false;
-          // ボタンを有効化（念のため）
-          const btn = document.getElementById('btn-' + fieldId);
-          if (btn) { btn.disabled = false; }
-        }
+        if (chk) chk.checked = false;
       });
+      const btn = document.getElementById('btn-' + fieldId);
+      if (btn) btn.disabled = false;
     } else {
       span.textContent = '未選択';
     }
   }
 
   function toggleOption(fieldId, checkId, statusLabel) {
-    const thisChk = document.getElementById(checkId);
+    const thisChk  = document.getElementById(checkId);
     const fileInput = document.getElementById(fieldId);
-    const btn = document.getElementById('btn-' + fieldId);
+    const btn      = document.getElementById('btn-' + fieldId);
     const nameSpan = document.getElementById(fieldId + '-name');
 
     if (thisChk.checked) {
-      // 他のチェックボックスを排他解除
       ['_later', '_none'].forEach(suffix => {
         const otherId = fieldId + suffix;
         if (otherId !== checkId) {
@@ -573,15 +584,13 @@
           if (other) other.checked = false;
         }
       });
-      // ファイル入力を無効化してラベル表示
       if (fileInput) { fileInput.value = ''; fileInput.disabled = true; }
-      if (btn) { btn.disabled = true; }
-      if (nameSpan) { nameSpan.textContent = statusLabel; }
+      if (btn)       { btn.disabled = true; }
+      if (nameSpan)  { nameSpan.textContent = statusLabel; }
     } else {
-      // チェックを外したら入力を復元
-      if (fileInput) { fileInput.disabled = false; }
-      if (btn) { btn.disabled = false; }
-      if (nameSpan) { nameSpan.textContent = '未選択'; }
+      if (fileInput) fileInput.disabled = false;
+      if (btn)       btn.disabled = false;
+      if (nameSpan)  nameSpan.textContent = '未選択';
     }
   }
 
@@ -627,14 +636,14 @@
     }
 
     if (step === 3) {
-      const locs = document.querySelectorAll('input[name="workLocation"]:checked');
-      if (locs.length === 0) {
-        document.getElementById('g-workLocation').classList.add('field-error');
-        document.getElementById('err-workLocation').style.display = 'block';
+      const regions = document.querySelectorAll('input[name="workRegion"]:checked');
+      if (regions.length === 0) {
+        document.getElementById('g-workRegion').classList.add('field-error');
+        document.getElementById('err-workRegion').style.display = 'block';
         valid = false;
       } else {
-        document.getElementById('g-workLocation').classList.remove('field-error');
-        document.getElementById('err-workLocation').style.display = 'none';
+        document.getElementById('g-workRegion').classList.remove('field-error');
+        document.getElementById('err-workRegion').style.display = 'none';
       }
       clearError('occupation');
       if (!val('occupation')) setError('occupation');
@@ -675,7 +684,7 @@
     return new Promise((resolve) => {
       if (!file) { resolve(null); return; }
       const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target.result.split(',')[1]);
+      reader.onload  = (e) => resolve(e.target.result.split(',')[1]);
       reader.onerror = () => resolve(null);
       reader.readAsDataURL(file);
     });
@@ -685,35 +694,34 @@
     if (!validateStep(5)) return;
     document.getElementById('loading-overlay').classList.add('show');
 
-    const workLocations = Array.from(document.querySelectorAll('input[name="workLocation"]:checked'))
+    const workRegions = Array.from(document.querySelectorAll('input[name="workRegion"]:checked'))
       .map(cb => cb.value).join('、');
 
     const fileFields = ['cardFront', 'cardBack', 'jlpt', 'ssw', 'resume'];
     const formData = new FormData();
 
-    // テキスト項目
-    formData.append('lastName',      document.getElementById('lastName').value);
-    formData.append('firstName',     document.getElementById('firstName').value);
-    formData.append('lastNameKana',  document.getElementById('lastNameKana').value);
-    formData.append('firstNameKana', document.getElementById('firstNameKana').value);
-    formData.append('gender',        (document.querySelector('input[name="gender"]:checked') || {}).value || '');
-    formData.append('birthDate',     document.getElementById('birthDate').value);
-    formData.append('nationality',   document.getElementById('nationality').value);
-    formData.append('prefecture',    document.getElementById('prefecture').value);
-    formData.append('address',       document.getElementById('address').value);
-    formData.append('phone',         document.getElementById('phone').value);
-    formData.append('email',         document.getElementById('email').value);
-    formData.append('visaStatus',    document.getElementById('visaStatus').value);
-    formData.append('visaExpiry',    document.getElementById('visaExpiry').value);
-    formData.append('workLocation',  workLocations);
-    formData.append('occupation',    document.getElementById('occupation').value);
-    formData.append('notes',         document.getElementById('notes').value);
+    formData.append('lastName',       document.getElementById('lastName').value);
+    formData.append('firstName',      document.getElementById('firstName').value);
+    formData.append('lastNameKana',   document.getElementById('lastNameKana').value);
+    formData.append('firstNameKana',  document.getElementById('firstNameKana').value);
+    formData.append('gender',         (document.querySelector('input[name="gender"]:checked') || {}).value || '');
+    formData.append('birthDate',      document.getElementById('birthDate').value);
+    formData.append('nationality',    document.getElementById('nationality').value);
+    formData.append('prefecture',     document.getElementById('prefecture').value);
+    formData.append('address',        document.getElementById('address').value);
+    formData.append('phone',          document.getElementById('phone').value);
+    formData.append('email',          document.getElementById('email').value);
+    formData.append('visaStatus',     document.getElementById('visaStatus').value);
+    formData.append('visaExpiry',     document.getElementById('visaExpiry').value);
+    formData.append('workRegion',     workRegions);
+    formData.append('workPrefecture', document.getElementById('workPrefecture').value);
+    formData.append('occupation',     document.getElementById('occupation').value);
+    formData.append('notes',          document.getElementById('notes').value);
 
-    // ファイル項目
     for (const id of fileFields) {
-      const inp      = document.getElementById(id);
-      const laterChk = document.getElementById(id + '_later');
-      const noneChk  = document.getElementById(id + '_none');
+      const inp       = document.getElementById(id);
+      const laterChk  = document.getElementById(id + '_later');
+      const noneChk   = document.getElementById(id + '_none');
 
       if (inp && !inp.disabled && inp.files && inp.files[0]) {
         const base64 = await fileToBase64(inp.files[0]);
