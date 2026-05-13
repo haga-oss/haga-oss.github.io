@@ -51,8 +51,10 @@
     .file-btn:hover { background: #c0281f; }
     .file-btn:disabled { background: #aaa; cursor: not-allowed; }
     .file-name { font-size: 12px; color: #888; }
-    .later-check { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: #555; }
-    .later-check label { margin-bottom: 0; font-size: 12px; color: #555; }
+    .option-checks { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .option-check-row { display: flex; align-items: center; gap: 8px; }
+    .option-check-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #e63329; }
+    .option-check-row label { font-size: 12px; color: #555; margin-bottom: 0; cursor: pointer; }
     .consent-box { background: #fafafa; border: 1px solid #ddd; border-radius: 8px; padding: 16px; font-size: 12px; color: #555; line-height: 1.7; max-height: 200px; overflow-y: auto; margin-bottom: 16px; }
     .consent-check { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; }
     .consent-check input { margin-top: 2px; flex-shrink: 0; }
@@ -364,7 +366,7 @@
     <!-- STEP 4 書類アップロード -->
     <div class="card step-card" id="step4" style="display:none">
       <h2>書類アップロード <span>Document Upload</span></h2>
-      <p class="desc">各書類を添付してください。ファイルサイズ上限：2MB / Max file size: 2MB</p>
+      <p class="desc">各書類を添付してください。後日提出可能な書類は「後日送付」を選択してください。<br>ファイルサイズ上限：2MB / Max file size: 2MB</p>
 
       <!-- 在留カード表 -->
       <div class="file-block">
@@ -374,9 +376,11 @@
           <input type="file" id="cardFront" accept="image/*,.pdf" onchange="showFileName(this,'cardFront-name')">
           <span class="file-name" id="cardFront-name">未選択</span>
         </div>
-        <div class="later-check">
-          <input type="checkbox" id="cardFront_later" onchange="toggleOption('cardFront','cardFront_later','後日送付')">
-          <label for="cardFront_later">後日送付 / Send later</label>
+        <div class="option-checks">
+          <div class="option-check-row">
+            <input type="checkbox" id="cardFront_later" onchange="toggleOption('cardFront','cardFront_later','後日送付')">
+            <label for="cardFront_later">後日送付 / Send later</label>
+          </div>
         </div>
       </div>
 
@@ -388,9 +392,11 @@
           <input type="file" id="cardBack" accept="image/*,.pdf" onchange="showFileName(this,'cardBack-name')">
           <span class="file-name" id="cardBack-name">未選択</span>
         </div>
-        <div class="later-check">
-          <input type="checkbox" id="cardBack_later" onchange="toggleOption('cardBack','cardBack_later','後日送付')">
-          <label for="cardBack_later">後日送付 / Send later</label>
+        <div class="option-checks">
+          <div class="option-check-row">
+            <input type="checkbox" id="cardBack_later" onchange="toggleOption('cardBack','cardBack_later','後日送付')">
+            <label for="cardBack_later">後日送付 / Send later</label>
+          </div>
         </div>
       </div>
 
@@ -402,13 +408,15 @@
           <input type="file" id="jlpt" accept="image/*,.pdf" onchange="showFileName(this,'jlpt-name')">
           <span class="file-name" id="jlpt-name">未選択</span>
         </div>
-        <div class="later-check">
-          <input type="checkbox" id="jlpt_later" onchange="toggleOption('jlpt','jlpt_later','後日送付')">
-          <label for="jlpt_later">後日送付 / Send later</label>
-        </div>
-        <div class="later-check">
-          <input type="checkbox" id="jlpt_none" onchange="toggleOption('jlpt','jlpt_none','未取得')">
-          <label for="jlpt_none">未取得 / Not obtained</label>
+        <div class="option-checks">
+          <div class="option-check-row">
+            <input type="checkbox" id="jlpt_later" onchange="toggleOption('jlpt','jlpt_later','後日送付')">
+            <label for="jlpt_later">後日送付 / Send later</label>
+          </div>
+          <div class="option-check-row">
+            <input type="checkbox" id="jlpt_none" onchange="toggleOption('jlpt','jlpt_none','未取得')">
+            <label for="jlpt_none">未取得 / Not obtained</label>
+          </div>
         </div>
       </div>
 
@@ -420,13 +428,15 @@
           <input type="file" id="ssw" accept="image/*,.pdf" onchange="showFileName(this,'ssw-name')">
           <span class="file-name" id="ssw-name">未選択</span>
         </div>
-        <div class="later-check">
-          <input type="checkbox" id="ssw_later" onchange="toggleOption('ssw','ssw_later','後日送付')">
-          <label for="ssw_later">後日送付 / Send later</label>
-        </div>
-        <div class="later-check">
-          <input type="checkbox" id="ssw_none" onchange="toggleOption('ssw','ssw_none','未取得')">
-          <label for="ssw_none">未取得 / Not obtained</label>
+        <div class="option-checks">
+          <div class="option-check-row">
+            <input type="checkbox" id="ssw_later" onchange="toggleOption('ssw','ssw_later','後日送付')">
+            <label for="ssw_later">後日送付 / Send later</label>
+          </div>
+          <div class="option-check-row">
+            <input type="checkbox" id="ssw_none" onchange="toggleOption('ssw','ssw_none','未取得')">
+            <label for="ssw_none">未取得 / Not obtained</label>
+          </div>
         </div>
       </div>
 
@@ -438,9 +448,11 @@
           <input type="file" id="resume" accept="image/*,.pdf" onchange="showFileName(this,'resume-name')">
           <span class="file-name" id="resume-name">未選択</span>
         </div>
-        <div class="later-check">
-          <input type="checkbox" id="resume_later" onchange="toggleOption('resume','resume_later','後日送付')">
-          <label for="resume_later">後日送付 / Send later</label>
+        <div class="option-checks">
+          <div class="option-check-row">
+            <input type="checkbox" id="resume_later" onchange="toggleOption('resume','resume_later','後日送付')">
+            <label for="resume_later">後日送付 / Send later</label>
+          </div>
         </div>
       </div>
 
@@ -510,15 +522,6 @@
   let currentStep = 1;
   const totalSteps = 5;
 
-  // 各フィールドの現在の選択状態を管理
-  const fieldStatus = {
-    cardFront: 'none',
-    cardBack:  'none',
-    jlpt:      'none',
-    ssw:       'none',
-    resume:    'none'
-  };
-
   function updateProgress(step) {
     document.getElementById('progress-fill').style.width = (step / totalSteps * 100) + '%';
     document.getElementById('progress-label').textContent = 'STEP ' + step + ' / ' + totalSteps;
@@ -539,45 +542,46 @@
         return;
       }
       span.textContent = file.name;
-      // ファイルが選択されたらチェックボックスを全解除
+      // ファイル選択時はチェックボックスを全解除
       const fieldId = input.id;
-      ['_later','_none'].forEach(suffix => {
+      ['_later', '_none'].forEach(suffix => {
         const chk = document.getElementById(fieldId + suffix);
-        if (chk) chk.checked = false;
+        if (chk) {
+          chk.checked = false;
+          // ボタンを有効化（念のため）
+          const btn = document.getElementById('btn-' + fieldId);
+          if (btn) { btn.disabled = false; }
+        }
       });
-      fieldStatus[fieldId] = 'file';
     } else {
       span.textContent = '未選択';
-      fieldStatus[input.id] = 'none';
     }
   }
 
-  function toggleOption(fieldId, checkId, statusValue) {
+  function toggleOption(fieldId, checkId, statusLabel) {
     const thisChk = document.getElementById(checkId);
     const fileInput = document.getElementById(fieldId);
     const btn = document.getElementById('btn-' + fieldId);
     const nameSpan = document.getElementById(fieldId + '-name');
 
     if (thisChk.checked) {
-      // 他のチェックボックスを解除（later/none の排他制御）
-      ['_later','_none'].forEach(suffix => {
+      // 他のチェックボックスを排他解除
+      ['_later', '_none'].forEach(suffix => {
         const otherId = fieldId + suffix;
         if (otherId !== checkId) {
           const other = document.getElementById(otherId);
           if (other) other.checked = false;
         }
       });
-      // ファイル入力を無効化
-      fileInput.value = '';
-      fileInput.disabled = true;
-      btn.disabled = true;
-      nameSpan.textContent = statusValue;
-      fieldStatus[fieldId] = statusValue === '後日送付' ? 'later' : 'none_cert';
+      // ファイル入力を無効化してラベル表示
+      if (fileInput) { fileInput.value = ''; fileInput.disabled = true; }
+      if (btn) { btn.disabled = true; }
+      if (nameSpan) { nameSpan.textContent = statusLabel; }
     } else {
-      fileInput.disabled = false;
-      btn.disabled = false;
-      nameSpan.textContent = '未選択';
-      fieldStatus[fieldId] = 'none';
+      // チェックを外したら入力を復元
+      if (fileInput) { fileInput.disabled = false; }
+      if (btn) { btn.disabled = false; }
+      if (nameSpan) { nameSpan.textContent = '未選択'; }
     }
   }
 
@@ -608,10 +612,10 @@
         document.getElementById('g-gender').classList.remove('field-error');
         document.getElementById('err-gender').style.display = 'none';
       }
-      if (!val('birthDate'))    setError('birthDate');
-      if (!val('nationality'))  setError('nationality');
-      if (!val('prefecture'))   setError('prefecture');
-      if (!val('phone'))        setError('phone');
+      if (!val('birthDate'))   setError('birthDate');
+      if (!val('nationality')) setError('nationality');
+      if (!val('prefecture'))  setError('prefecture');
+      if (!val('phone'))       setError('phone');
       const emailVal = val('email');
       if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) setError('email');
     }
@@ -688,31 +692,30 @@
     const formData = new FormData();
 
     // テキスト項目
-    formData.append('lastName',       document.getElementById('lastName').value);
-    formData.append('firstName',      document.getElementById('firstName').value);
-    formData.append('lastNameKana',   document.getElementById('lastNameKana').value);
-    formData.append('firstNameKana',  document.getElementById('firstNameKana').value);
-    formData.append('gender',         (document.querySelector('input[name="gender"]:checked') || {}).value || '');
-    formData.append('birthDate',      document.getElementById('birthDate').value);
-    formData.append('nationality',    document.getElementById('nationality').value);
-    formData.append('prefecture',     document.getElementById('prefecture').value);
-    formData.append('address',        document.getElementById('address').value);
-    formData.append('phone',          document.getElementById('phone').value);
-    formData.append('email',          document.getElementById('email').value);
-    formData.append('visaStatus',     document.getElementById('visaStatus').value);
-    formData.append('visaExpiry',     document.getElementById('visaExpiry').value);
-    formData.append('workLocation',   workLocations);
-    formData.append('occupation',     document.getElementById('occupation').value);
-    formData.append('notes',          document.getElementById('notes').value);
+    formData.append('lastName',      document.getElementById('lastName').value);
+    formData.append('firstName',     document.getElementById('firstName').value);
+    formData.append('lastNameKana',  document.getElementById('lastNameKana').value);
+    formData.append('firstNameKana', document.getElementById('firstNameKana').value);
+    formData.append('gender',        (document.querySelector('input[name="gender"]:checked') || {}).value || '');
+    formData.append('birthDate',     document.getElementById('birthDate').value);
+    formData.append('nationality',   document.getElementById('nationality').value);
+    formData.append('prefecture',    document.getElementById('prefecture').value);
+    formData.append('address',       document.getElementById('address').value);
+    formData.append('phone',         document.getElementById('phone').value);
+    formData.append('email',         document.getElementById('email').value);
+    formData.append('visaStatus',    document.getElementById('visaStatus').value);
+    formData.append('visaExpiry',    document.getElementById('visaExpiry').value);
+    formData.append('workLocation',  workLocations);
+    formData.append('occupation',    document.getElementById('occupation').value);
+    formData.append('notes',         document.getElementById('notes').value);
 
     // ファイル項目
     for (const id of fileFields) {
-      const inp = document.getElementById(id);
+      const inp      = document.getElementById(id);
       const laterChk = document.getElementById(id + '_later');
       const noneChk  = document.getElementById(id + '_none');
 
       if (inp && !inp.disabled && inp.files && inp.files[0]) {
-        // ファイルあり → Base64変換して送信
         const base64 = await fileToBase64(inp.files[0]);
         if (base64) {
           formData.append(id + '_data', base64);
