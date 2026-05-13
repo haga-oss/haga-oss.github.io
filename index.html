@@ -34,12 +34,22 @@
     }
     input:focus, select:focus, textarea:focus { border-color: #e63329; outline: none; background: #fff; }
     textarea { resize: vertical; min-height: 80px; }
-    .radio-group, .check-group { display: flex; gap: 12px; flex-wrap: wrap; }
-    .radio-group label, .check-group label {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 13px; color: #333; cursor: pointer; margin-bottom: 0;
-    }
     input[type="radio"], input[type="checkbox"] { accent-color: #e63329; width: 16px; height: 16px; }
+    .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .radio-group label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #333; cursor: pointer; margin-bottom: 0; }
+
+    /* 地方チェックボックス */
+    .region-list { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+    .region-item { display: flex; align-items: center; gap: 5px; }
+    .region-item label { font-size: 13px; color: #333; cursor: pointer; margin-bottom: 0; font-weight: 600; }
+
+    /* 都道府県展開エリア */
+    .pref-panel { display: none; background: #f0f4ff; border: 1px solid #c5d0f0; border-radius: 8px; padding: 12px 14px; margin-top: 10px; margin-bottom: 4px; }
+    .pref-panel.show { display: block; }
+    .pref-panel-title { font-size: 11px; color: #5566aa; font-weight: 700; margin-bottom: 8px; }
+    .pref-checks { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+    .pref-checks label { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #333; cursor: pointer; margin-bottom: 0; }
+
     .file-block { background: #fafafa; border: 1.5px dashed #ddd; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
     .file-block label.title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 10px; display: block; }
     .file-input-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -61,7 +71,6 @@
     .btn-back { background: #f0f0f0; color: #555; border: none; border-radius: 10px; padding: 14px 20px; font-size: 14px; cursor: pointer; }
     .btn-back:hover { background: #e0e0e0; }
     .error-msg { color: #e63329; font-size: 11px; margin-top: 4px; display: none; }
-    .field-error input, .field-error select, .field-error textarea { border-color: #e63329; }
     .field-error .error-msg { display: block; }
     #complete-screen { display: none; text-align: center; padding: 60px 20px; }
     #complete-screen h2 { font-size: 22px; color: #e63329; margin-bottom: 16px; }
@@ -268,41 +277,137 @@
     <!-- STEP 3 希望条件 -->
     <div class="card step-card" id="step3" style="display:none">
       <h2>希望条件 <span>Job Preferences</span></h2>
-      <p class="desc">希望する勤務地と職種を選択してください</p>
+      <p class="desc">希望する勤務地と職種を選択してください（複数選択可）</p>
 
-      <!-- 希望勤務地（地方ブロック） -->
       <div class="form-group" id="g-workRegion" style="margin-bottom:18px">
-        <label>希望勤務地（地方） Preferred Region <span class="req">※</span></label>
-        <div class="check-group" style="margin-top:8px">
-          <label><input type="checkbox" name="workRegion" value="北海道・東北"> 北海道・東北</label>
-          <label><input type="checkbox" name="workRegion" value="関東"> 関東</label>
-          <label><input type="checkbox" name="workRegion" value="中部・東海"> 中部・東海</label>
-          <label><input type="checkbox" name="workRegion" value="関西"> 関西</label>
-          <label><input type="checkbox" name="workRegion" value="中国・四国"> 中国・四国</label>
-          <label><input type="checkbox" name="workRegion" value="九州・沖縄"> 九州・沖縄</label>
-          <label><input type="checkbox" name="workRegion" value="未定"> 未定</label>
+        <label>希望勤務地 Preferred Location <span class="req">※</span>
+          <span style="font-weight:400;color:#aaa;font-size:11px;margin-left:4px">地方を選ぶと都道府県が表示されます</span>
+        </label>
+
+        <!-- 地方チェックボックス＋都道府県展開 -->
+        <div style="margin-top:8px">
+
+          <!-- 北海道・東北 -->
+          <div class="region-item" style="margin-bottom:6px">
+            <input type="checkbox" id="r_hokkaido" name="workRegion" value="北海道・東北" onchange="togglePref('hokkaido',this.checked)">
+            <label for="r_hokkaido">北海道・東北</label>
+          </div>
+          <div class="pref-panel" id="pref-hokkaido">
+            <div class="pref-panel-title">▼ 都道府県を選択（任意・複数可）</div>
+            <div class="pref-checks">
+              <label><input type="checkbox" name="workPref" value="北海道"> 北海道</label>
+              <label><input type="checkbox" name="workPref" value="青森県"> 青森県</label>
+              <label><input type="checkbox" name="workPref" value="岩手県"> 岩手県</label>
+              <label><input type="checkbox" name="workPref" value="宮城県"> 宮城県</label>
+              <label><input type="checkbox" name="workPref" value="秋田県"> 秋田県</label>
+              <label><input type="checkbox" name="workPref" value="山形県"> 山形県</label>
+              <label><input type="checkbox" name="workPref" value="福島県"> 福島県</label>
+            </div>
+          </div>
+
+          <!-- 関東 -->
+          <div class="region-item" style="margin-bottom:6px">
+            <input type="checkbox" id="r_kanto" name="workRegion" value="関東" onchange="togglePref('kanto',this.checked)">
+            <label for="r_kanto">関東</label>
+          </div>
+          <div class="pref-panel" id="pref-kanto">
+            <div class="pref-panel-title">▼ 都道府県を選択（任意・複数可）</div>
+            <div class="pref-checks">
+              <label><input type="checkbox" name="workPref" value="茨城県"> 茨城県</label>
+              <label><input type="checkbox" name="workPref" value="栃木県"> 栃木県</label>
+              <label><input type="checkbox" name="workPref" value="群馬県"> 群馬県</label>
+              <label><input type="checkbox" name="workPref" value="埼玉県"> 埼玉県</label>
+              <label><input type="checkbox" name="workPref" value="千葉県"> 千葉県</label>
+              <label><input type="checkbox" name="workPref" value="東京都"> 東京都</label>
+              <label><input type="checkbox" name="workPref" value="神奈川県"> 神奈川県</label>
+            </div>
+          </div>
+
+          <!-- 中部・東海 -->
+          <div class="region-item" style="margin-bottom:6px">
+            <input type="checkbox" id="r_chubu" name="workRegion" value="中部・東海" onchange="togglePref('chubu',this.checked)">
+            <label for="r_chubu">中部・東海</label>
+          </div>
+          <div class="pref-panel" id="pref-chubu">
+            <div class="pref-panel-title">▼ 都道府県を選択（任意・複数可）</div>
+            <div class="pref-checks">
+              <label><input type="checkbox" name="workPref" value="新潟県"> 新潟県</label>
+              <label><input type="checkbox" name="workPref" value="富山県"> 富山県</label>
+              <label><input type="checkbox" name="workPref" value="石川県"> 石川県</label>
+              <label><input type="checkbox" name="workPref" value="福井県"> 福井県</label>
+              <label><input type="checkbox" name="workPref" value="山梨県"> 山梨県</label>
+              <label><input type="checkbox" name="workPref" value="長野県"> 長野県</label>
+              <label><input type="checkbox" name="workPref" value="岐阜県"> 岐阜県</label>
+              <label><input type="checkbox" name="workPref" value="静岡県"> 静岡県</label>
+              <label><input type="checkbox" name="workPref" value="愛知県"> 愛知県</label>
+              <label><input type="checkbox" name="workPref" value="三重県"> 三重県</label>
+            </div>
+          </div>
+
+          <!-- 関西 -->
+          <div class="region-item" style="margin-bottom:6px">
+            <input type="checkbox" id="r_kansai" name="workRegion" value="関西" onchange="togglePref('kansai',this.checked)">
+            <label for="r_kansai">関西</label>
+          </div>
+          <div class="pref-panel" id="pref-kansai">
+            <div class="pref-panel-title">▼ 都道府県を選択（任意・複数可）</div>
+            <div class="pref-checks">
+              <label><input type="checkbox" name="workPref" value="滋賀県"> 滋賀県</label>
+              <label><input type="checkbox" name="workPref" value="京都府"> 京都府</label>
+              <label><input type="checkbox" name="workPref" value="大阪府"> 大阪府</label>
+              <label><input type="checkbox" name="workPref" value="兵庫県"> 兵庫県</label>
+              <label><input type="checkbox" name="workPref" value="奈良県"> 奈良県</label>
+              <label><input type="checkbox" name="workPref" value="和歌山県"> 和歌山県</label>
+            </div>
+          </div>
+
+          <!-- 中国・四国 -->
+          <div class="region-item" style="margin-bottom:6px">
+            <input type="checkbox" id="r_chugoku" name="workRegion" value="中国・四国" onchange="togglePref('chugoku',this.checked)">
+            <label for="r_chugoku">中国・四国</label>
+          </div>
+          <div class="pref-panel" id="pref-chugoku">
+            <div class="pref-panel-title">▼ 都道府県を選択（任意・複数可）</div>
+            <div class="pref-checks">
+              <label><input type="checkbox" name="workPref" value="鳥取県"> 鳥取県</label>
+              <label><input type="checkbox" name="workPref" value="島根県"> 島根県</label>
+              <label><input type="checkbox" name="workPref" value="岡山県"> 岡山県</label>
+              <label><input type="checkbox" name="workPref" value="広島県"> 広島県</label>
+              <label><input type="checkbox" name="workPref" value="山口県"> 山口県</label>
+              <label><input type="checkbox" name="workPref" value="徳島県"> 徳島県</label>
+              <label><input type="checkbox" name="workPref" value="香川県"> 香川県</label>
+              <label><input type="checkbox" name="workPref" value="愛媛県"> 愛媛県</label>
+              <label><input type="checkbox" name="workPref" value="高知県"> 高知県</label>
+            </div>
+          </div>
+
+          <!-- 九州・沖縄 -->
+          <div class="region-item" style="margin-bottom:6px">
+            <input type="checkbox" id="r_kyushu" name="workRegion" value="九州・沖縄" onchange="togglePref('kyushu',this.checked)">
+            <label for="r_kyushu">九州・沖縄</label>
+          </div>
+          <div class="pref-panel" id="pref-kyushu">
+            <div class="pref-panel-title">▼ 都道府県を選択（任意・複数可）</div>
+            <div class="pref-checks">
+              <label><input type="checkbox" name="workPref" value="福岡県"> 福岡県</label>
+              <label><input type="checkbox" name="workPref" value="佐賀県"> 佐賀県</label>
+              <label><input type="checkbox" name="workPref" value="長崎県"> 長崎県</label>
+              <label><input type="checkbox" name="workPref" value="熊本県"> 熊本県</label>
+              <label><input type="checkbox" name="workPref" value="大分県"> 大分県</label>
+              <label><input type="checkbox" name="workPref" value="宮崎県"> 宮崎県</label>
+              <label><input type="checkbox" name="workPref" value="鹿児島県"> 鹿児島県</label>
+              <label><input type="checkbox" name="workPref" value="沖縄県"> 沖縄県</label>
+            </div>
+          </div>
+
+          <!-- 未定 -->
+          <div class="region-item" style="margin-bottom:6px">
+            <input type="checkbox" id="r_undecided" name="workRegion" value="未定" onchange="toggleUndecided(this.checked)">
+            <label for="r_undecided">未定 / Undecided</label>
+          </div>
+
         </div>
         <span class="error-msg" id="err-workRegion">希望勤務地を選択してください</span>
-      </div>
-
-      <!-- 希望勤務地（都道府県） -->
-      <div class="form-group" id="g-workPrefecture" style="margin-bottom:18px">
-        <label>希望勤務地（都道府県） Preferred Prefecture <span class="opt">任意</span></label>
-        <select id="workPrefecture">
-          <option value="">選択 / Select（未定の場合は空欄可）</option>
-          <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option>
-          <option>秋田県</option><option>山形県</option><option>福島県</option><option>茨城県</option>
-          <option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option>
-          <option>東京都</option><option>神奈川県</option><option>新潟県</option><option>富山県</option>
-          <option>石川県</option><option>福井県</option><option>山梨県</option><option>長野県</option>
-          <option>岐阜県</option><option>静岡県</option><option>愛知県</option><option>三重県</option>
-          <option>滋賀県</option><option>京都府</option><option>大阪府</option><option>兵庫県</option>
-          <option>奈良県</option><option>和歌山県</option><option>鳥取県</option><option>島根県</option>
-          <option>岡山県</option><option>広島県</option><option>山口県</option><option>徳島県</option>
-          <option>香川県</option><option>愛媛県</option><option>高知県</option><option>福岡県</option>
-          <option>佐賀県</option><option>長崎県</option><option>熊本県</option><option>大分県</option>
-          <option>宮崎県</option><option>鹿児島県</option><option>沖縄県</option>
-        </select>
       </div>
 
       <!-- 希望職種 -->
@@ -384,7 +489,6 @@
       <h2>書類アップロード <span>Document Upload</span></h2>
       <p class="desc">各書類を添付してください。後日提出可能な書類は「後日送付」を選択してください。<br>ファイルサイズ上限：2MB / Max file size: 2MB</p>
 
-      <!-- 在留カード表 -->
       <div class="file-block">
         <label class="title">在留カード（表） Residence Card Front <span class="req">※</span></label>
         <div class="file-input-wrap">
@@ -400,7 +504,6 @@
         </div>
       </div>
 
-      <!-- 在留カード裏 -->
       <div class="file-block">
         <label class="title">在留カード（裏） Residence Card Back <span class="req">※</span></label>
         <div class="file-input-wrap">
@@ -416,7 +519,6 @@
         </div>
       </div>
 
-      <!-- JLPT -->
       <div class="file-block">
         <label class="title">JLPT日本語能力試験 証明書 <span class="opt">任意</span></label>
         <div class="file-input-wrap">
@@ -436,7 +538,6 @@
         </div>
       </div>
 
-      <!-- 特定技能評価証明書 -->
       <div class="file-block">
         <label class="title">特定技能評価証明書 SSW Certificate <span class="opt">任意</span></label>
         <div class="file-input-wrap">
@@ -456,7 +557,6 @@
         </div>
       </div>
 
-      <!-- 履歴書 -->
       <div class="file-block">
         <label class="title">履歴書 Resume / CV <span class="req">※</span></label>
         <div class="file-input-wrap">
@@ -484,26 +584,20 @@
 
       <div class="consent-box">
         <p><strong>株式会社トライバルユニット　個人情報取扱方針</strong></p>
-        <p>当社は、人材派遣業、人材紹介業、RPO事業、BPO事業、オフィスリース事業、システム開発・販売事業を行っております。</p>
-        <br>
+        <p>当社は、人材派遣業、人材紹介業、RPO事業、BPO事業、オフィスリース事業、システム開発・販売事業を行っております。</p><br>
         <p><strong>【取得する個人情報】</strong></p>
-        <p>求人応募者情報として、氏名・年齢・住所・電話番号・メールアドレス・職歴等を取得します。取得方法は書面またはWebフォームによる本人からの直接取得のほか、代理人による取得を含む場合があります。</p>
-        <br>
+        <p>求人応募者情報として、氏名・年齢・住所・電話番号・メールアドレス・職歴等を取得します。取得方法は書面またはWebフォームによる本人からの直接取得のほか、代理人による取得を含む場合があります。</p><br>
         <p><strong>【利用目的】</strong></p>
-        <p>取得した個人情報は、採用活動および人材紹介・派遣サービスの提供のみに使用します。</p>
-        <br>
+        <p>取得した個人情報は、採用活動および人材紹介・派遣サービスの提供のみに使用します。</p><br>
         <p><strong>【第三者提供】</strong></p>
-        <p>ご本人の同意がある場合、法令に基づく場合、生命・財産の保護に必要な場合、業務委託の範囲内、事業承継の場合を除き、第三者への提供は行いません。</p>
-        <br>
+        <p>ご本人の同意がある場合、法令に基づく場合、生命・財産の保護に必要な場合、業務委託の範囲内、事業承継の場合を除き、第三者への提供は行いません。</p><br>
         <p><strong>【開示・訂正・削除等のご請求】</strong></p>
-        <p>利用目的の通知、開示、訂正、追加・削除、利用停止、第三者提供停止のご請求が可能です。</p>
-        <br>
+        <p>利用目的の通知、開示、訂正、追加・削除、利用停止、第三者提供停止のご請求が可能です。</p><br>
         <p><strong>【お問い合わせ窓口】</strong></p>
         <p>株式会社トライバルユニット　個人情報保護管理者：小山 篤<br>
         TEL：011-200-5111　Mail：info@trybalunit.com<br>
         〒060-0001 北海道札幌市中央区北一条西3丁目3番地1<br>
-        代表取締役社長：田中 智幸　最終更新：2024年9月1日</p>
-        <br>
+        代表取締役社長：田中 智幸　最終更新：2024年9月1日</p><br>
         <p><strong>【認定団体窓口】</strong></p>
         <p>一般財団法人日本情報経済社会推進協会<br>
         TEL：03-5860-7565（平日 9:30〜12:00 / 13:00〜16:30）</p>
@@ -534,9 +628,36 @@
 
 <script>
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpJ2yqILVauYDq3ZnuXW_qhL9T5p1ZoZ-OhFkzwJPmIM0aBZouqKx5DGOIDDyC6O9cvg/exec';
-
   let currentStep = 1;
   const totalSteps = 5;
+
+  // 地方チェックで都道府県パネルを開閉
+  function togglePref(regionKey, checked) {
+    const panel = document.getElementById('pref-' + regionKey);
+    if (checked) {
+      panel.classList.add('show');
+    } else {
+      panel.classList.remove('show');
+      // 都道府県チェックを全解除
+      panel.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+    }
+    // 未定との排他
+    if (checked) {
+      document.getElementById('r_undecided').checked = false;
+    }
+  }
+
+  // 未定を選ぶと他を全解除
+  function toggleUndecided(checked) {
+    if (checked) {
+      ['hokkaido','kanto','chubu','kansai','chugoku','kyushu'].forEach(key => {
+        document.getElementById('r_' + key).checked = false;
+        const panel = document.getElementById('pref-' + key);
+        panel.classList.remove('show');
+        panel.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+      });
+    }
+  }
 
   function updateProgress(step) {
     document.getElementById('progress-fill').style.width = (step / totalSteps * 100) + '%';
@@ -559,7 +680,7 @@
       }
       span.textContent = file.name;
       const fieldId = input.id;
-      ['_later', '_none'].forEach(suffix => {
+      ['_later','_none'].forEach(suffix => {
         const chk = document.getElementById(fieldId + suffix);
         if (chk) chk.checked = false;
       });
@@ -575,9 +696,8 @@
     const fileInput = document.getElementById(fieldId);
     const btn      = document.getElementById('btn-' + fieldId);
     const nameSpan = document.getElementById(fieldId + '-name');
-
     if (thisChk.checked) {
-      ['_later', '_none'].forEach(suffix => {
+      ['_later','_none'].forEach(suffix => {
         const otherId = fieldId + suffix;
         if (otherId !== checkId) {
           const other = document.getElementById(otherId);
@@ -596,15 +716,8 @@
 
   function validateStep(step) {
     let valid = true;
-
-    const clearError = (id) => {
-      const g = document.getElementById('g-' + id);
-      if (g) g.classList.remove('field-error');
-    };
-    const setError = (id) => {
-      const g = document.getElementById('g-' + id);
-      if (g) { g.classList.add('field-error'); valid = false; }
-    };
+    const clearError = (id) => { const g = document.getElementById('g-' + id); if (g) g.classList.remove('field-error'); };
+    const setError   = (id) => { const g = document.getElementById('g-' + id); if (g) { g.classList.add('field-error'); valid = false; } };
     const val = (id) => (document.getElementById(id) || {}).value || '';
 
     if (step === 1) {
@@ -652,14 +765,9 @@
     if (step === 5) {
       const consent = document.getElementById('consentCheck');
       const errConsent = document.getElementById('err-consent');
-      if (!consent.checked) {
-        errConsent.style.display = 'block';
-        valid = false;
-      } else {
-        errConsent.style.display = 'none';
-      }
+      if (!consent.checked) { errConsent.style.display = 'block'; valid = false; }
+      else { errConsent.style.display = 'none'; }
     }
-
     return valid;
   }
 
@@ -696,8 +804,10 @@
 
     const workRegions = Array.from(document.querySelectorAll('input[name="workRegion"]:checked'))
       .map(cb => cb.value).join('、');
+    const workPrefs = Array.from(document.querySelectorAll('input[name="workPref"]:checked'))
+      .map(cb => cb.value).join('、');
 
-    const fileFields = ['cardFront', 'cardBack', 'jlpt', 'ssw', 'resume'];
+    const fileFields = ['cardFront','cardBack','jlpt','ssw','resume'];
     const formData = new FormData();
 
     formData.append('lastName',       document.getElementById('lastName').value);
@@ -714,15 +824,14 @@
     formData.append('visaStatus',     document.getElementById('visaStatus').value);
     formData.append('visaExpiry',     document.getElementById('visaExpiry').value);
     formData.append('workRegion',     workRegions);
-    formData.append('workPrefecture', document.getElementById('workPrefecture').value);
+    formData.append('workPrefecture', workPrefs);
     formData.append('occupation',     document.getElementById('occupation').value);
     formData.append('notes',          document.getElementById('notes').value);
 
     for (const id of fileFields) {
-      const inp       = document.getElementById(id);
-      const laterChk  = document.getElementById(id + '_later');
-      const noneChk   = document.getElementById(id + '_none');
-
+      const inp      = document.getElementById(id);
+      const laterChk = document.getElementById(id + '_later');
+      const noneChk  = document.getElementById(id + '_none');
       if (inp && !inp.disabled && inp.files && inp.files[0]) {
         const base64 = await fileToBase64(inp.files[0]);
         if (base64) {
