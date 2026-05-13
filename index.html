@@ -32,7 +32,6 @@
       margin-top: 4px;
     }
 
-    /* 進捗バー */
     .progress-wrap {
       background: #fff;
       padding: 16px;
@@ -75,20 +74,14 @@
       margin-top: 4px;
     }
 
-    /* フォーム本体 */
     .form-container {
       max-width: 640px;
       margin: 24px auto;
       padding: 0 16px 40px;
     }
 
-    .step {
-      display: none;
-    }
-
-    .step.active {
-      display: block;
-    }
+    .step { display: none; }
+    .step.active { display: block; }
 
     .step-title {
       font-size: 18px;
@@ -107,9 +100,7 @@
       margin-top: 2px;
     }
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+    .form-group { margin-bottom: 20px; }
 
     label {
       display: block;
@@ -143,7 +134,7 @@
     input[type="text"],
     input[type="email"],
     input[type="tel"],
-    input[type="number"],
+    input[type="date"],
     select,
     textarea {
       width: 100%;
@@ -159,29 +150,14 @@
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: #e63946;
-      box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+      box-shadow: 0 0 0 3px rgba(230,57,70,0.1);
     }
 
-    .input-row {
-      display: flex;
-      gap: 10px;
-    }
+    .input-row { display: flex; gap: 10px; }
+    .input-row > div { flex: 1; }
+    .input-row label { font-size: 12px; color: #666; }
 
-    .input-row > div {
-      flex: 1;
-    }
-
-    .input-row label {
-      font-size: 12px;
-      color: #666;
-    }
-
-    /* ラジオボタン */
-    .radio-group {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+    .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
 
     .radio-group label {
       display: flex;
@@ -212,24 +188,10 @@
       font-weight: bold;
     }
 
-    /* 日付プルダウン */
-    .date-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
+    .date-row { display: flex; gap: 8px; align-items: center; }
+    .date-row select { flex: 1; }
+    .date-row span { font-size: 14px; color: #555; white-space: nowrap; }
 
-    .date-row select {
-      flex: 1;
-    }
-
-    .date-row span {
-      font-size: 14px;
-      color: #555;
-      white-space: nowrap;
-    }
-
-    /* 希望勤務地 */
     .region-block {
       border: 1px solid #e0e0e0;
       border-radius: 8px;
@@ -249,28 +211,12 @@
       user-select: none;
     }
 
-    .region-header:hover {
-      background: #ececec;
-    }
+    .region-header:hover { background: #ececec; }
+    .region-header .arrow { transition: transform 0.3s; font-size: 12px; }
+    .region-header.open .arrow { transform: rotate(180deg); }
 
-    .region-header .arrow {
-      transition: transform 0.3s;
-      font-size: 12px;
-    }
-
-    .region-header.open .arrow {
-      transform: rotate(180deg);
-    }
-
-    .region-body {
-      display: none;
-      padding: 12px 16px;
-      background: #fff;
-    }
-
-    .region-body.open {
-      display: block;
-    }
+    .region-body { display: none; padding: 12px 16px; background: #fff; }
+    .region-body.open { display: block; }
 
     .checkbox-grid {
       display: grid;
@@ -294,7 +240,6 @@
       flex-shrink: 0;
     }
 
-    /* ファイルアップロード */
     .file-group {
       background: #fafafa;
       border: 1px dashed #ccc;
@@ -309,11 +254,7 @@
       margin-bottom: 8px;
     }
 
-    .file-note {
-      font-size: 12px;
-      color: #999;
-      margin-bottom: 8px;
-    }
+    .file-note { font-size: 12px; color: #999; margin-bottom: 8px; }
 
     .file-later {
       display: flex;
@@ -339,7 +280,6 @@
       background: #fff;
     }
 
-    /* 同意文 */
     .consent-box {
       background: #fff;
       border: 1px solid #ddd;
@@ -359,9 +299,7 @@
       background: #f9f9f9;
     }
 
-    .consent-toggle:hover {
-      background: #f0f0f0;
-    }
+    .consent-toggle:hover { background: #f0f0f0; }
 
     .consent-content {
       display: none;
@@ -374,15 +312,8 @@
       border-top: 1px solid #eee;
     }
 
-    .consent-content.open {
-      display: block;
-    }
-
-    .consent-content h4 {
-      font-size: 13px;
-      margin: 12px 0 4px;
-      color: #333;
-    }
+    .consent-content.open { display: block; }
+    .consent-content h4 { font-size: 13px; margin: 12px 0 4px; color: #333; }
 
     .consent-check {
       display: flex;
@@ -408,12 +339,7 @@
       cursor: pointer;
     }
 
-    /* ボタン */
-    .btn-wrap {
-      display: flex;
-      gap: 12px;
-      margin-top: 28px;
-    }
+    .btn-wrap { display: flex; gap: 12px; margin-top: 28px; }
 
     .btn-prev {
       flex: 1;
@@ -437,12 +363,9 @@
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      letter-spacing: 0.5px;
     }
 
-    .btn-next:hover {
-      background: #c1121f;
-    }
+    .btn-next:hover { background: #c1121f; }
 
     .btn-submit {
       width: 100%;
@@ -458,51 +381,22 @@
       letter-spacing: 1px;
     }
 
-    .btn-submit:hover {
-      background: #0f0f1e;
-    }
+    .btn-submit:hover { background: #0f0f1e; }
 
-    /* エラー */
-    .error-msg {
-      color: #e63946;
-      font-size: 12px;
-      margin-top: 4px;
-      display: none;
-    }
+    .error-msg { color: #e63946; font-size: 12px; margin-top: 4px; display: none; }
+    .error-msg.show { display: block; }
+    input.error, select.error, textarea.error { border-color: #e63946; }
 
-    .error-msg.show {
-      display: block;
-    }
-
-    input.error, select.error, textarea.error {
-      border-color: #e63946;
-    }
-
-    /* 完了画面 */
     #complete-screen {
       display: none;
       text-align: center;
       padding: 60px 20px;
     }
 
-    #complete-screen .icon {
-      font-size: 60px;
-      margin-bottom: 16px;
-    }
+    #complete-screen .icon { font-size: 60px; margin-bottom: 16px; }
+    #complete-screen h2 { font-size: 22px; color: #1a1a2e; margin-bottom: 12px; }
+    #complete-screen p { font-size: 14px; color: #666; line-height: 1.8; }
 
-    #complete-screen h2 {
-      font-size: 22px;
-      color: #1a1a2e;
-      margin-bottom: 12px;
-    }
-
-    #complete-screen p {
-      font-size: 14px;
-      color: #666;
-      line-height: 1.8;
-    }
-
-    /* 送信中オーバーレイ */
     #loading-overlay {
       display: none;
       position: fixed;
@@ -517,9 +411,7 @@
       font-size: 16px;
     }
 
-    #loading-overlay.show {
-      display: flex;
-    }
+    #loading-overlay.show { display: flex; }
 
     .spinner {
       width: 40px;
@@ -531,18 +423,11 @@
       margin-bottom: 16px;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 480px) {
-      .checkbox-grid {
-        grid-template-columns: 1fr;
-      }
-      .input-row {
-        flex-direction: column;
-        gap: 6px;
-      }
+      .checkbox-grid { grid-template-columns: 1fr; }
+      .input-row { flex-direction: column; gap: 6px; }
     }
   </style>
 </head>
@@ -553,7 +438,6 @@
   <p>Hello! Trybalunit entry Page!</p>
 </div>
 
-<!-- 進捗バー -->
 <div class="progress-wrap">
   <div class="progress-labels">
     <span id="lbl1" class="active">基本情報</span>
@@ -569,9 +453,9 @@
 </div>
 
 <div class="form-container">
-  <form id="entryForm" enctype="multipart/form-data">
+  <form id="entryForm">
 
-    <!-- ===== STEP 1: 基本情報 ===== -->
+    <!-- STEP 1 -->
     <div class="step active" id="step1">
       <div class="step-title">基本情報<span>Basic Information</span></div>
 
@@ -580,12 +464,12 @@
         <div class="input-row">
           <div>
             <label>姓 Last Name</label>
-            <input type="text" id="lastName" placeholder="例）TRYBALUNIT" required>
+            <input type="text" id="lastName" placeholder="例）TRYBALUNIT">
             <div class="error-msg" id="err-lastName">姓を入力してください</div>
           </div>
           <div>
             <label>名 First Name</label>
-            <input type="text" id="firstName" placeholder="例）JOB" required>
+            <input type="text" id="firstName" placeholder="例）JOB">
             <div class="error-msg" id="err-firstName">名を入力してください</div>
           </div>
         </div>
@@ -596,12 +480,12 @@
         <div class="input-row">
           <div>
             <label>セイ</label>
-            <input type="text" id="lastNameKana" placeholder="例）トライバルユニット" pattern="[ァ-ヶー　 ]+">
+            <input type="text" id="lastNameKana" placeholder="例）トライバルユニット">
             <div class="error-msg" id="err-lastNameKana">カタカナで入力してください</div>
           </div>
           <div>
             <label>メイ</label>
-            <input type="text" id="firstNameKana" placeholder="例）ジョブ" pattern="[ァ-ヶー　 ]+">
+            <input type="text" id="firstNameKana" placeholder="例）ジョブ">
             <div class="error-msg" id="err-firstNameKana">カタカナで入力してください</div>
           </div>
         </div>
@@ -620,17 +504,11 @@
       <div class="form-group">
         <label>生年月日 <span class="en">Date of Birth</span><span class="required">*必須</span></label>
         <div class="date-row">
-          <select id="birthYear">
-            <option value="">年 Year</option>
-          </select>
+          <select id="birthYear"><option value="">年 Year</option></select>
           <span>年</span>
-          <select id="birthMonth">
-            <option value="">月 Month</option>
-          </select>
+          <select id="birthMonth"><option value="">月 Month</option></select>
           <span>月</span>
-          <select id="birthDay">
-            <option value="">日 Day</option>
-          </select>
+          <select id="birthDay"><option value="">日 Day</option></select>
           <span>日</span>
         </div>
         <div class="error-msg" id="err-birth">生年月日を選択してください</div>
@@ -766,7 +644,7 @@
 
       <div class="form-group">
         <label>住所詳細 <span class="en">Address</span><span class="optional">任意 Optional</span></label>
-        <input type="text" id="address" placeholder="例）東京都新宿区西新宿1丁目25-1 新宿センタービル29階">
+        <input type="text" id="address" placeholder="例）東京都新宿区西新宿1丁目25-1">
       </div>
 
       <div class="form-group">
@@ -786,7 +664,7 @@
       </div>
     </div>
 
-    <!-- ===== STEP 2: 在留情報 ===== -->
+    <!-- STEP 2 -->
     <div class="step" id="step2">
       <div class="step-title">在留・資格情報<span>Residential Status</span></div>
 
@@ -815,7 +693,7 @@
 
       <div class="form-group">
         <label>在留期限 <span class="en">Term of Stay</span><span class="required">*必須</span></label>
-        <input type="date" id="visaExpiry" min="" max="">
+        <input type="date" id="visaExpiry">
         <div class="error-msg" id="err-visaExpiry">在留期限を選択してください</div>
       </div>
 
@@ -825,11 +703,10 @@
       </div>
     </div>
 
-    <!-- ===== STEP 3: 希望条件 ===== -->
+    <!-- STEP 3 -->
     <div class="step" id="step3">
       <div class="step-title">希望条件<span>Job Preferences</span></div>
 
-      <!-- 希望勤務地 -->
       <div class="form-group">
         <label>希望勤務地 <span class="en">Preferred Work Location</span><span class="required">*必須</span></label>
 
@@ -944,7 +821,6 @@
           </div>
         </div>
 
-        <!-- 未確定は常時表示 -->
         <div style="margin-top:10px; padding:12px 16px; background:#fff; border:1px solid #e0e0e0; border-radius:8px;">
           <label style="font-weight:normal;"><input type="checkbox" name="workLocation" value="未確定"> 未確定 / Undecided</label>
         </div>
@@ -952,7 +828,6 @@
         <div class="error-msg" id="err-workLocation">希望勤務地を1つ以上選択してください</div>
       </div>
 
-      <!-- 希望職種 -->
       <div class="form-group">
         <label>希望職種 <span class="en">Desired Occupation</span><span class="required">*必須</span></label>
         <select id="occupation">
@@ -1036,7 +911,7 @@
       </div>
     </div>
 
-    <!-- ===== STEP 4: 書類アップロード ===== -->
+    <!-- STEP 4 -->
     <div class="step" id="step4">
       <div class="step-title">書類アップロード<span>Document Upload</span></div>
       <p style="font-size:13px; color:#888; margin-bottom:20px;">※ すべて任意です。後日担当者にお送りいただくことも可能です。<br>All documents are optional. You may send them to our staff later.</p>
@@ -1044,7 +919,7 @@
       <div class="file-group">
         <label class="file-label">在留カード（表）<span class="en">Front of Resident Card</span><span class="optional">任意</span></label>
         <p class="file-note">2MBを超える場合はスクリーンショットしてください / Max 2MB</p>
-        <input type="file" id="cardFront" accept="image/*,.pdf" onchange="handleFile(this,'cardFrontLater')">
+        <input type="file" id="cardFront" accept="image/*,.pdf" onchange="handleFile(this)">
         <div class="file-later">
           <input type="checkbox" id="cardFrontLater" onchange="toggleFile(this,'cardFront')">
           <label for="cardFrontLater">後日担当者に送る / Send later</label>
@@ -1054,7 +929,7 @@
       <div class="file-group">
         <label class="file-label">在留カード（裏）<span class="en">Back of Resident Card</span><span class="optional">任意</span></label>
         <p class="file-note">2MBを超える場合はスクリーンショットしてください / Max 2MB</p>
-        <input type="file" id="cardBack" accept="image/*,.pdf" onchange="handleFile(this,'cardBackLater')">
+        <input type="file" id="cardBack" accept="image/*,.pdf" onchange="handleFile(this)">
         <div class="file-later">
           <input type="checkbox" id="cardBackLater" onchange="toggleFile(this,'cardBack')">
           <label for="cardBackLater">後日担当者に送る / Send later</label>
@@ -1069,7 +944,7 @@
             <input type="checkbox" id="noJlpt" onchange="toggleFile(this,'jlpt')"> 未取得 / Not obtained
           </label>
         </div>
-        <input type="file" id="jlpt" accept="image/*,.pdf">
+        <input type="file" id="jlpt" accept="image/*,.pdf" onchange="handleFile(this)">
       </div>
 
       <div class="file-group">
@@ -1080,13 +955,13 @@
             <input type="checkbox" id="noSsw" onchange="toggleFile(this,'ssw')"> 未取得 / Not obtained
           </label>
         </div>
-        <input type="file" id="ssw" accept="image/*,.pdf">
+        <input type="file" id="ssw" accept="image/*,.pdf" onchange="handleFile(this)">
       </div>
 
       <div class="file-group">
         <label class="file-label">履歴書 <span class="en">Resume</span><span class="optional">任意</span></label>
         <p class="file-note">2MBを超える場合はスクリーンショットしてください / Max 2MB</p>
-        <input type="file" id="resume" accept="image/*,.pdf,.doc,.docx" onchange="handleFile(this,'resumeLater')">
+        <input type="file" id="resume" accept="image/*,.pdf,.doc,.docx" onchange="handleFile(this)">
         <div class="file-later">
           <input type="checkbox" id="resumeLater" onchange="toggleFile(this,'resume')">
           <label for="resumeLater">後日担当者に送る / Send later</label>
@@ -1104,7 +979,7 @@
       </div>
     </div>
 
-    <!-- ===== STEP 5: 同意・送信 ===== -->
+    <!-- STEP 5 -->
     <div class="step" id="step5">
       <div class="step-title">個人情報の取扱い・送信<span>Privacy Policy & Submit</span></div>
 
@@ -1115,21 +990,17 @@
         <div class="consent-content" id="consentContent">
           <h4>提供するサービスの概要</h4>
           <p>人材派遣事業、BPO事業、オフィスリースサポート事業、システム開発・販売事業</p>
-
           <h4>取得する個人情報とその取得方法</h4>
           <p>ア. 顧客情報（会社名、部署名、氏名、住所、電話番号、メールアドレスなど）<br>
           イ. 従業者情報（氏名、年齢、住所、電話番号、職歴、家族構成など）<br>
           ウ. 従業者などの個人番号<br>
           エ. 求人応募者情報（氏名、年齢、住所、電話番号、メールアドレス、職歴など）</p>
-
           <h4>個人情報の利用目的</h4>
-          <p>（求人、派遣登録応募者情報）採用活動に利用</p>
-          <p>なお、予め明示・公表した利用目的の範囲を超えてご依頼者等の個人情報を利用する必要が生じた場合は、ご依頼者等にその旨をご連絡し、同意をいただいた上で利用します。</p>
-
+          <p>（求人、派遣登録応募者情報）採用活動に利用<br>
+          なお、予め明示・公表した利用目的の範囲を超えてご依頼者等の個人情報を利用する必要が生じた場合は、ご依頼者等にその旨をご連絡し、同意をいただいた上で利用します。</p>
           <h4>個人情報の提供</h4>
           <p>当社は、次の場合を除き、ご依頼者の個人情報を第三者に開示または提供しません。<br>
           1) ご依頼者の同意がある場合 / 2) 法令に基づく場合 / 3) 人の生命・身体・財産の保護に必要な場合 / 4) 利用目的達成に必要な範囲で委託する場合 / 5) 事業承継が行われる場合</p>
-
           <h4>個人情報に関するお問合せ</h4>
           <p>株式会社トライバルユニット<br>
           個人情報保護管理者：小山 篤<br>
@@ -1161,7 +1032,6 @@
 
   </form>
 
-  <!-- 完了画面 -->
   <div id="complete-screen">
     <div class="icon">✅</div>
     <h2>エントリーが完了しました！<br><small style="font-size:16px;">Entry Complete!</small></h2>
@@ -1170,19 +1040,16 @@
   </div>
 </div>
 
-<!-- 送信中オーバーレイ -->
 <div id="loading-overlay">
   <div class="spinner"></div>
   <p>送信中... / Submitting...</p>
 </div>
 
 <script>
-  // ===== 設定 =====
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpJ2yqILVauYDq3ZnuXW_qhL9T5p1ZoZ-OhFkzwJPmIM0aBZouqKx5DGOIDDyC6O9cvg/exec';
   let currentStep = 1;
   const totalSteps = 5;
 
-  // ===== 生年月日プルダウン初期化 =====
   window.onload = function() {
     const yearSel = document.getElementById('birthYear');
     for (let y = 2005; y >= 1950; y--) {
@@ -1196,24 +1063,19 @@
     for (let d = 1; d <= 31; d++) {
       daySel.innerHTML += `<option value="${String(d).padStart(2,'0')}">${String(d).padStart(2,'0')}</option>`;
     }
-
-    // 在留期限の最小日付を今日に設定
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('visaExpiry').min = today;
   };
 
-  // ===== 進捗バー更新 =====
   function updateProgress(step) {
     const pct = (step / totalSteps) * 100;
     document.getElementById('progressBar').style.width = pct + '%';
     document.getElementById('progressText').textContent = step + ' / ' + totalSteps;
     for (let i = 1; i <= totalSteps; i++) {
-      const lbl = document.getElementById('lbl' + i);
-      lbl.classList.toggle('active', i === step);
+      document.getElementById('lbl' + i).classList.toggle('active', i === step);
     }
   }
 
-  // ===== ステップ移動 =====
   function goNext(step) {
     if (!validateStep(step)) return;
     document.getElementById('step' + step).classList.remove('active');
@@ -1231,10 +1093,8 @@
     window.scrollTo(0, 0);
   }
 
-  // ===== バリデーション =====
   function validateStep(step) {
     let valid = true;
-
     if (step === 1) {
       valid = checkRequired('lastName', 'err-lastName') && valid;
       valid = checkRequired('firstName', 'err-firstName') && valid;
@@ -1247,26 +1107,21 @@
       valid = checkRequired('phone', 'err-phone') && valid;
       valid = checkEmail('email', 'err-email') && valid;
     }
-
     if (step === 2) {
       valid = checkSelect('visaStatus', 'err-visaStatus') && valid;
       valid = checkRequired('visaExpiry', 'err-visaExpiry') && valid;
     }
-
     if (step === 3) {
       valid = checkCheckboxGroup('workLocation', 'err-workLocation') && valid;
       valid = checkSelect('occupation', 'err-occupation') && valid;
     }
-
     if (step === 5) {
       if (!document.getElementById('consentCheck').checked) {
-        showError('err-consent');
-        valid = false;
+        showError('err-consent'); valid = false;
       } else {
         hideError('err-consent');
       }
     }
-
     return valid;
   }
 
@@ -1278,15 +1133,12 @@
 
   function checkKana(id, errId) {
     const val = document.getElementById(id).value.trim();
-    const kanaPattern = /^[ァ-ヶー\s　]*$/;
-    if (!val) { showError(errId); return false; }
-    if (!kanaPattern.test(val)) { showError(errId); return false; }
+    if (!val || !/^[ァ-ヶー\s　]*$/.test(val)) { showError(errId); return false; }
     hideError(errId); return true;
   }
 
   function checkRadio(name, errId) {
-    const checked = document.querySelector(`input[name="${name}"]:checked`);
-    if (!checked) { showError(errId); return false; }
+    if (!document.querySelector(`input[name="${name}"]:checked`)) { showError(errId); return false; }
     hideError(errId); return true;
   }
 
@@ -1299,54 +1151,55 @@
   }
 
   function checkSelect(id, errId) {
-    const val = document.getElementById(id).value;
-    if (!val) { showError(errId); document.getElementById(id).classList.add('error'); return false; }
+    if (!document.getElementById(id).value) { showError(errId); document.getElementById(id).classList.add('error'); return false; }
     hideError(errId); document.getElementById(id).classList.remove('error'); return true;
   }
 
   function checkEmail(id, errId) {
     const val = document.getElementById(id).value.trim();
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!val || !emailPattern.test(val)) { showError(errId); return false; }
+    if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { showError(errId); return false; }
     hideError(errId); return true;
   }
 
   function checkCheckboxGroup(name, errId) {
-    const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
-    if (checked.length === 0) { showError(errId); return false; }
+    if (document.querySelectorAll(`input[name="${name}"]:checked`).length === 0) { showError(errId); return false; }
     hideError(errId); return true;
   }
 
   function showError(id) { document.getElementById(id).classList.add('show'); }
   function hideError(id) { document.getElementById(id).classList.remove('show'); }
 
-  // ===== 折りたたみ（勤務地） =====
   function toggleRegion(header) {
     header.classList.toggle('open');
-    const body = header.nextElementSibling;
-    body.classList.toggle('open');
+    header.nextElementSibling.classList.toggle('open');
   }
 
-  // ===== 同意文折りたたみ =====
   function toggleConsent() {
     document.getElementById('consentContent').classList.toggle('open');
   }
 
-  // ===== ファイル制御 =====
   function toggleFile(checkbox, fileId) {
     const fileInput = document.getElementById(fileId);
     fileInput.disabled = checkbox.checked;
     if (checkbox.checked) fileInput.value = '';
   }
 
-  function handleFile(input, laterCheckboxId) {
+  function handleFile(input) {
     if (input.files[0] && input.files[0].size > 2 * 1024 * 1024) {
       alert('ファイルサイズが2MBを超えています。スクリーンショットして再度アップロードしてください。\nFile size exceeds 2MB. Please screenshot and re-upload.');
       input.value = '';
     }
   }
 
-  // ===== フォーム送信 =====
+  function fileToBase64(file) {
+    return new Promise((resolve) => {
+      if (!file) { resolve(null); return; }
+      const reader = new FileReader();
+      reader.onload = ev => resolve(ev.target.result.split(',')[1]);
+      reader.readAsDataURL(file);
+    });
+  }
+
   async function submitForm() {
     if (!validateStep(5)) return;
 
@@ -1356,29 +1209,48 @@
       document.querySelectorAll('input[name="workLocation"]:checked')
     ).map(cb => cb.value).join('、');
 
-    const formData = new FormData();
-    formData.append('lastName',     document.getElementById('lastName').value);
-    formData.append('firstName',    document.getElementById('firstName').value);
-    formData.append('lastNameKana', document.getElementById('lastNameKana').value);
-    formData.append('firstNameKana',document.getElementById('firstNameKana').value);
-    formData.append('gender',       document.querySelector('input[name="gender"]:checked')?.value || '');
-    formData.append('birthDate',    `${document.getElementById('birthYear').value}/${document.getElementById('birthMonth').value}/${document.getElementById('birthDay').value}`);
-    formData.append('nationality',  document.getElementById('nationality').value);
-    formData.append('prefecture',   document.getElementById('prefecture').value);
-    formData.append('address',      document.getElementById('address').value);
-    formData.append('phone',        document.getElementById('phone').value);
-    formData.append('email',        document.getElementById('email').value);
-    formData.append('visaStatus',   document.getElementById('visaStatus').value);
-    formData.append('visaExpiry',   document.getElementById('visaExpiry').value);
-    formData.append('workLocation', workLocations);
-    formData.append('occupation',   document.getElementById('occupation').value);
-    formData.append('notes',        document.getElementById('notes').value);
-
-    // ファイル添付
     const fileFields = ['cardFront','cardBack','jlpt','ssw','resume'];
-    fileFields.forEach(id => {
+    const fileData = {};
+    for (const id of fileFields) {
       const input = document.getElementById(id);
-      if (input && input.files[0]) formData.append(id, input.files[0]);
+      if (input && !input.disabled && input.files && input.files[0]) {
+        fileData[id] = {
+          data: await fileToBase64(input.files[0]),
+          name: input.files[0].name,
+          type: input.files[0].type
+        };
+      }
+    }
+
+    const formData = new FormData();
+    formData.append('lastName',      document.getElementById('lastName').value);
+    formData.append('firstName',     document.getElementById('firstName').value);
+    formData.append('lastNameKana',  document.getElementById('lastNameKana').value);
+    formData.append('firstNameKana', document.getElementById('firstNameKana').value);
+    formData.append('gender',        document.querySelector('input[name="gender"]:checked')?.value || '');
+    formData.append('birthDate',     `${document.getElementById('birthYear').value}/${document.getElementById('birthMonth').value}/${document.getElementById('birthDay').value}`);
+    formData.append('nationality',   document.getElementById('nationality').value);
+    formData.append('prefecture',    document.getElementById('prefecture').value);
+    formData.append('address',       document.getElementById('address').value);
+    formData.append('phone',         document.getElementById('phone').value);
+    formData.append('email',         document.getElementById('email').value);
+    formData.append('visaStatus',    document.getElementById('visaStatus').value);
+    formData.append('visaExpiry',    document.getElementById('visaExpiry').value);
+    formData.append('workLocation',  workLocations);
+    formData.append('occupation',    document.getElementById('occupation').value);
+    formData.append('notes',         document.getElementById('notes').value);
+
+    fileFields.forEach(id => {
+      if (fileData[id]) {
+        formData.append(id + '_data', fileData[id].data);
+        formData.append(id + '_name', fileData[id].name);
+        formData.append(id + '_type', fileData[id].type);
+      } else {
+        const laterCheck = document.getElementById(id + 'Later');
+        if (laterCheck && laterCheck.checked) {
+          formData.append(id + 'Later', 'true');
+        }
+      }
     });
 
     try {
@@ -1387,7 +1259,7 @@
       document.getElementById('entryForm').style.display = 'none';
       document.getElementById('complete-screen').style.display = 'block';
       window.scrollTo(0, 0);
-    } catch (e) {
+    } catch (err) {
       document.getElementById('loading-overlay').classList.remove('show');
       alert('送信に失敗しました。時間をおいて再度お試しください。\nSubmission failed. Please try again later.');
     }
