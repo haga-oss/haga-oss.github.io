@@ -26,22 +26,45 @@
     .form-group input[type=text],
     .form-group input[type=email],
     .form-group input[type=tel],
-    .form-group input[type=date],
     .form-group select,
     .form-group textarea {
-      width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px;
-      font-size: 14px; outline: none; transition: border .2s;
+      width: 100%;
+      max-width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border .2s;
+      box-sizing: border-box;
+    }
+    /* ★修正1: date入力のはみ出し・左寄せ対応 */
+    .form-group input[type=date] {
+      width: 100%;
+      max-width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border .2s;
+      box-sizing: border-box;
+      text-align: left;
+      -webkit-text-align: left;
+      display: block;
+      appearance: none;
+      -webkit-appearance: none;
     }
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus { border-color: #ff6b35; }
     .form-row { display: flex; gap: 12px; }
-    .form-row .form-group { flex: 1; }
+    .form-row .form-group { flex: 1; min-width: 0; }
     .radio-group { display: flex; gap: 16px; flex-wrap: wrap; }
     .radio-group label { font-weight: 400; display: flex; align-items: center; gap: 6px; cursor: pointer; }
     .zip-row { display: flex; gap: 8px; align-items: flex-end; }
-    .zip-row input { flex: 1; }
-    .zip-btn { padding: 10px 16px; background: #ff6b35; color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+    .zip-row input { flex: 1; min-width: 0; }
+    .zip-btn { padding: 10px 16px; background: #ff6b35; color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
     .zip-btn:hover { background: #e05a28; }
     .file-block { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
     .file-block:last-child { border-bottom: none; }
@@ -93,6 +116,7 @@
       .form-row { flex-direction: column; }
       .pref-checks { grid-template-columns: 1fr 1fr; }
       .region-grid { grid-template-columns: 1fr; }
+      .card { padding: 20px 16px; }
     }
   </style>
 </head>
@@ -164,17 +188,17 @@
     <div class="form-group">
       <label>国籍 Nationality <span class="req">※</span></label>
       <select id="nationality">
-        <option value="">選択してください</option>
-        <option>ベトナム</option>
-        <option>フィリピン</option>
-        <option>インドネシア</option>
-        <option>ミャンマー</option>
-        <option>タイ</option>
-        <option>カンボジア</option>
-        <option>ネパール</option>
-        <option>中国</option>
-        <option>韓国</option>
-        <option>その他</option>
+        <option value="">選択してください / Select</option>
+        <option>ベトナム / Vietnam</option>
+        <option>フィリピン / Philippines</option>
+        <option>インドネシア / Indonesia</option>
+        <option>ミャンマー / Myanmar</option>
+        <option>タイ / Thailand</option>
+        <option>カンボジア / Cambodia</option>
+        <option>ネパール / Nepal</option>
+        <option>中国 / China</option>
+        <option>韓国 / Korea</option>
+        <option>その他 / Other</option>
       </select>
       <div class="error-msg" id="err-nationality">国籍を選択してください</div>
     </div>
@@ -191,7 +215,7 @@
     <div class="form-group">
       <label>現住所都道府県 Prefecture <span class="req">※</span></label>
       <select id="prefecture">
-        <option value="">選択してください</option>
+        <option value="">選択してください / Select</option>
         <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option>
         <option>秋田県</option><option>山形県</option><option>福島県</option><option>茨城県</option>
         <option>栃木県</option><option>群馬県</option><option>埼玉県</option><option>千葉県</option>
@@ -244,21 +268,21 @@
     <div class="form-group">
       <label>在留資格 Visa Status <span class="req">※</span></label>
       <select id="visaStatus">
-        <option value="">選択してください</option>
-        <option>特定技能1号</option>
-        <option>特定技能2号</option>
-        <option>技能実習1号</option>
-        <option>技能実習2号</option>
-        <option>技能実習3号</option>
-        <option>介護ビザ（介護）</option>
-        <option>高度専門職1号</option>
-        <option>永住者</option>
-        <option>定住者</option>
-        <option>日本人の配偶者等</option>
-        <option>永住者の配偶者等</option>
-        <option>家族滞在</option>
-        <option>技術・人文知識・国際業務</option>
-        <option>その他</option>
+        <option value="">選択してください / Select</option>
+        <option>特定技能1号 / Specified Skilled Worker 1</option>
+        <option>特定技能2号 / Specified Skilled Worker 2</option>
+        <option>技能実習1号 / Technical Intern Training 1</option>
+        <option>技能実習2号 / Technical Intern Training 2</option>
+        <option>技能実習3号 / Technical Intern Training 3</option>
+        <option>介護ビザ（介護） / Long-term Care Visa</option>
+        <option>高度専門職1号 / Highly Skilled Professional 1</option>
+        <option>永住者 / Permanent Resident</option>
+        <option>定住者 / Long-term Resident</option>
+        <option>日本人の配偶者等 / Spouse of Japanese National</option>
+        <option>永住者の配偶者等 / Spouse of Permanent Resident</option>
+        <option>家族滞在 / Dependent</option>
+        <option>技術・人文知識・国際業務 / Engineer / Specialist in Humanities</option>
+        <option>その他 / Other</option>
       </select>
       <div class="error-msg" id="err-visaStatus">在留資格を選択してください</div>
     </div>
@@ -314,7 +338,6 @@
       </div>
       <div class="error-msg" id="err-workRegion">希望勤務地を選択してください</div>
 
-      <!-- 都道府県パネル -->
       <div class="pref-panel" id="pref-hokkaido">
         <div class="pref-panel-title">▼ 都道府県を選択（複数可）</div>
         <div class="pref-checks">
@@ -399,28 +422,29 @@
       </div>
     </div>
 
+    <!-- ★修正3: 希望職種を日英混在の旧パターンに戻す -->
     <div class="form-group">
       <label>希望職種 Preferred Job Type <span class="req">※</span></label>
       <select id="occupation">
-        <option value="">選択してください</option>
-        <option>製造業</option>
-        <option>介護・福祉</option>
-        <option>飲食・調理</option>
-        <option>建設・土木</option>
-        <option>農業・漁業</option>
-        <option>清掃・設備管理</option>
-        <option>物流・倉庫</option>
-        <option>接客・販売</option>
-        <option>IT・エンジニア</option>
-        <option>事務・管理</option>
-        <option>その他</option>
+        <option value="">選択してください / Select</option>
+        <option>製造業 / Manufacturing</option>
+        <option>介護・福祉 / Nursing Care & Welfare</option>
+        <option>飲食・調理 / Food Service & Cooking</option>
+        <option>建設・土木 / Construction & Civil Engineering</option>
+        <option>農業・漁業 / Agriculture & Fishery</option>
+        <option>清掃・設備管理 / Cleaning & Facility Management</option>
+        <option>物流・倉庫 / Logistics & Warehouse</option>
+        <option>接客・販売 / Customer Service & Sales</option>
+        <option>IT・エンジニア / IT & Engineering</option>
+        <option>事務・管理 / Office & Administration</option>
+        <option>その他 / Other</option>
       </select>
       <div class="error-msg" id="err-occupation">希望職種を選択してください</div>
     </div>
 
     <div class="form-group">
       <label>備考 Notes <span class="opt">任意</span></label>
-      <textarea id="notes" rows="3" placeholder="その他、ご要望・ご質問があればご記入ください"></textarea>
+      <textarea id="notes" rows="3" placeholder="その他、ご要望・ご質問があればご記入ください / Any other requests or questions"></textarea>
     </div>
 
     <div class="btn-wrap">
@@ -434,7 +458,7 @@
     <h2>書類アップロード <span>Document Upload</span></h2>
     <p class="desc">
       ※ のついた書類は必須です。ファイルがない場合は「後日送付」を選択してください。<br>
-      ファイルサイズ上限：顔写真 5MB、その他 2MB
+      顔写真 5MB・その他 2MB まで / Max: Photo 5MB, Others 2MB
     </p>
 
     <!-- 顔写真 -->
@@ -445,7 +469,7 @@
         <button type="button" class="file-btn-camera" id="cameraBtn" onclick="document.getElementById('photo_camera').click()">📷 カメラで撮影</button>
         <input type="file" id="photo" accept="image/*" style="display:none" onchange="handlePhotoSelect(this)">
         <input type="file" id="photo_camera" accept="image/*" capture="user" style="display:none" onchange="handlePhotoSelect(this)">
-        <span class="file-name" id="photo-name">未選択</span>
+        <span class="file-name" id="photo-name">未選択 / Not selected</span>
       </div>
       <div class="photo-preview" id="photo-preview">
         <img id="photo-img" src="" alt="顔写真プレビュー">
@@ -465,7 +489,7 @@
       <div class="file-input-wrap">
         <button type="button" class="file-btn" onclick="document.getElementById('cardFront').click()">📁 ファイルを選択</button>
         <input type="file" id="cardFront" accept="image/*,.pdf" style="display:none" onchange="showFileName(this,'cardFront-name',2)">
-        <span class="file-name" id="cardFront-name">未選択</span>
+        <span class="file-name" id="cardFront-name">未選択 / Not selected</span>
       </div>
       <div class="option-checks">
         <div class="option-check-row">
@@ -482,7 +506,7 @@
       <div class="file-input-wrap">
         <button type="button" class="file-btn" onclick="document.getElementById('cardBack').click()">📁 ファイルを選択</button>
         <input type="file" id="cardBack" accept="image/*,.pdf" style="display:none" onchange="showFileName(this,'cardBack-name',2)">
-        <span class="file-name" id="cardBack-name">未選択</span>
+        <span class="file-name" id="cardBack-name">未選択 / Not selected</span>
       </div>
       <div class="option-checks">
         <div class="option-check-row">
@@ -499,7 +523,7 @@
       <div class="file-input-wrap">
         <button type="button" class="file-btn" onclick="document.getElementById('jlpt').click()">📁 ファイルを選択</button>
         <input type="file" id="jlpt" accept="image/*,.pdf" style="display:none" onchange="showFileName(this,'jlpt-name',2)">
-        <span class="file-name" id="jlpt-name">未選択</span>
+        <span class="file-name" id="jlpt-name">未選択 / Not selected</span>
       </div>
       <div class="option-checks">
         <div class="option-check-row">
@@ -519,7 +543,7 @@
       <div class="file-input-wrap">
         <button type="button" class="file-btn" onclick="document.getElementById('ssw').click()">📁 ファイルを選択</button>
         <input type="file" id="ssw" accept="image/*,.pdf" style="display:none" onchange="showFileName(this,'ssw-name',2)">
-        <span class="file-name" id="ssw-name">未選択</span>
+        <span class="file-name" id="ssw-name">未選択 / Not selected</span>
       </div>
       <div class="option-checks">
         <div class="option-check-row">
@@ -539,7 +563,7 @@
       <div class="file-input-wrap">
         <button type="button" class="file-btn" onclick="document.getElementById('resume').click()">📁 ファイルを選択</button>
         <input type="file" id="resume" accept="image/*,.pdf" style="display:none" onchange="showFileName(this,'resume-name',2)">
-        <span class="file-name" id="resume-name">未選択</span>
+        <span class="file-name" id="resume-name">未選択 / Not selected</span>
       </div>
       <div class="option-checks">
         <div class="option-check-row">
@@ -560,9 +584,9 @@
   <div class="card" id="step5" style="display:none">
     <h2>個人情報の取り扱い <span>Privacy Policy</span></h2>
     <div class="consent-box">
-      <p>株式会社TRYBALUNIT（以下「当社」）は、本フォームにて取得する個人情報を以下の目的で利用します。</p>
-      <p>【利用目的】求職者の就業支援・人材紹介サービスの提供、就業先企業への情報提供、各種連絡・書類送付</p>
-      <p>【第三者提供】法令に基づく場合を除き、本人の同意なく第三者に提供しません。</p>
+      <p>株式会社TRYBALUNIT（以下「当社」）は、本フォームにて取得する個人情報を以下の目的で利用します。</p><br>
+      <p>【利用目的】求職者の就業支援・人材紹介サービスの提供、就業先企業への情報提供、各種連絡・書類送付</p><br>
+      <p>【第三者提供】法令に基づく場合を除き、本人の同意なく第三者に提供しません。</p><br>
       <p>【お問い合わせ】個人情報の開示・訂正・削除はinfo@trybalunit.comまでご連絡ください。</p>
     </div>
     <div class="consent-check">
@@ -573,14 +597,14 @@
 
     <div class="btn-wrap">
       <button class="btn-back" onclick="prevStep(5)">← 戻る</button>
-      <button class="btn-submit" onclick="submitForm()">送信する SUBMIT</button>
+      <button class="btn-submit" onclick="submitForm()">送信する / SUBMIT</button>
     </div>
   </div>
 
   <!-- 送信完了 -->
   <div class="card success-card" id="successCard">
     <div class="success-icon">✅</div>
-    <h2>送信完了！</h2>
+    <h2>送信完了！ / Submitted!</h2>
     <p>エントリーを受け付けました。<br>担当者よりご連絡いたします。<br><br>Thank you for your entry.<br>We will contact you shortly.</p>
   </div>
 </div>
@@ -589,13 +613,11 @@
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpJ2yqILVauYDq3ZnuXW_qhL9T5p1ZoZ-OhFkzwJPmIM0aBZouqKx5DGOIDDyC6O9cvg/exec';
 let currentStep = 1;
 
-// ── プログレスバー更新 ──
 function updateProgress(step) {
   document.getElementById('progressFill').style.width = (step / 5 * 100) + '%';
   document.getElementById('progressLabel').textContent = 'STEP ' + step + ' / 5';
 }
 
-// ── 郵便番号検索 ──
 async function lookupZip() {
   const zip = document.getElementById('zipCode').value.replace(/-/g, '');
   if (zip.length !== 7) { alert('郵便番号は7桁で入力してください'); return; }
@@ -604,17 +626,13 @@ async function lookupZip() {
     const json = await res.json();
     if (json.results && json.results[0]) {
       const r = json.results[0];
-      // 都道府県セット
       const prefSel = document.getElementById('prefecture');
       for (let i = 0; i < prefSel.options.length; i++) {
-        if (prefSel.options[i].value === r.address1) {
-          prefSel.selectedIndex = i; break;
-        }
+        if (prefSel.options[i].value === r.address1) { prefSel.selectedIndex = i; break; }
       }
-      // 市区町村セット（address2のみ）
+      // ★市区町村にaddress2のみセット（address3は住所詳細へ）
       document.getElementById('city').value = r.address2;
-      // 住所詳細はクリア（address3は入力させる）
-      document.getElementById('address').value = '';
+      document.getElementById('address').value = r.address3 || '';
     } else {
       alert('郵便番号が見つかりませんでした');
     }
@@ -623,60 +641,47 @@ async function lookupZip() {
   }
 }
 
-// ── 顔写真処理（5MB上限・プレビュー表示）──
 function handlePhotoSelect(input) {
   const file = input.files[0];
   if (!file) return;
   if (file.size > 5 * 1024 * 1024) {
     alert('顔写真は5MB以下のファイルを選択してください');
-    input.value = '';
-    return;
+    input.value = ''; return;
   }
   document.getElementById('photo-name').textContent = file.name;
-  // チェックボックス解除
   document.getElementById('photo_later').checked = false;
-  document.getElementById('photo').disabled = false;
-  document.getElementById('photo_camera').disabled = false;
-  // プレビュー
   const reader = new FileReader();
   reader.onload = e => {
     document.getElementById('photo-img').src = e.target.result;
     document.getElementById('photo-preview').style.display = 'block';
   };
   reader.readAsDataURL(file);
-  // エラー消去
   document.getElementById('err-photo').classList.remove('show');
-  // もう片方のinputもリセット
   if (input.id === 'photo') document.getElementById('photo_camera').value = '';
   else document.getElementById('photo').value = '';
 }
 
-// ── ファイル選択（2MB上限）──
 function showFileName(input, spanId, maxMB) {
   const file = input.files[0];
   if (!file) return;
   if (file.size > maxMB * 1024 * 1024) {
     alert(maxMB + 'MB以下のファイルを選択してください');
     input.value = '';
-    document.getElementById(spanId).textContent = '未選択';
+    document.getElementById(spanId).textContent = '未選択 / Not selected';
     return;
   }
   document.getElementById(spanId).textContent = file.name;
-  // 同フィールドの後日送付・未取得チェックを解除
   const fieldId = input.id;
   ['later','none'].forEach(suffix => {
     const cb = document.getElementById(fieldId + '_' + suffix);
     if (cb) cb.checked = false;
   });
-  // エラー消去
   const errEl = document.getElementById('err-' + fieldId);
   if (errEl) errEl.classList.remove('show');
 }
 
-// ── 後日送付/未取得 トグル ──
 function toggleOption(fieldId, checkId, label) {
   const checked = document.getElementById(checkId).checked;
-  // 排他制御（laterとnoneは同時選択不可）
   if (checked) {
     ['later','none'].forEach(suffix => {
       const otherId = fieldId + '_' + suffix;
@@ -685,25 +690,18 @@ function toggleOption(fieldId, checkId, label) {
         if (other) other.checked = false;
       }
     });
-    // ファイル入力クリア
     const fi = document.getElementById(fieldId);
-    if (fi) { fi.value = ''; }
+    if (fi) fi.value = '';
     const fi2 = document.getElementById(fieldId + '_camera');
-    if (fi2) { fi2.value = ''; }
-    // ファイル名表示リセット
+    if (fi2) fi2.value = '';
     const nameEl = document.getElementById(fieldId + '-name');
-    if (nameEl) nameEl.textContent = '未選択';
-    // プレビュー非表示（顔写真）
-    if (fieldId === 'photo') {
-      document.getElementById('photo-preview').style.display = 'none';
-    }
-    // エラー消去
+    if (nameEl) nameEl.textContent = '未選択 / Not selected';
+    if (fieldId === 'photo') document.getElementById('photo-preview').style.display = 'none';
     const errEl = document.getElementById('err-' + fieldId);
     if (errEl) errEl.classList.remove('show');
   }
 }
 
-// ── 地方パネル表示切替 ──
 function togglePref(regionKey, show) {
   const panel = document.getElementById('pref-' + regionKey);
   if (panel) {
@@ -715,84 +713,60 @@ function togglePref(regionKey, show) {
   }
 }
 
-// ── 未定トグル ──
 function toggleUndecided(checked) {
-  const regions = ['hokkaido','kanto','chubu','kinki','chugoku','kyushu'];
-  const regionCbs = ['r_hokkaido','r_kanto','r_chubu','r_kinki','r_chugoku','r_kyushu'];
   if (checked) {
-    regionCbs.forEach(id => {
-      const cb = document.getElementById(id);
+    ['hokkaido','kanto','chubu','kinki','chugoku','kyushu'].forEach(r => {
+      const cb = document.getElementById('r_' + r);
       if (cb) cb.checked = false;
+      togglePref(r, false);
     });
-    regions.forEach(r => togglePref(r, false));
   }
 }
 
-// ── バリデーション ──
 function validateStep(step) {
   let ok = true;
-  const show = id => { document.getElementById(id).classList.add('show'); ok = false; };
-  const hide = id => document.getElementById(id).classList.remove('show');
+  const show = id => { const el = document.getElementById(id); if(el) { el.classList.add('show'); ok = false; } };
+  const hide = id => { const el = document.getElementById(id); if(el) el.classList.remove('show'); };
 
   if (step === 1) {
     ['lastName','firstName','lastNameKana','firstNameKana'].forEach(id => {
-      const val = document.getElementById(id).value.trim();
-      val ? hide('err-'+id) : show('err-'+id);
+      document.getElementById(id).value.trim() ? hide('err-'+id) : show('err-'+id);
     });
-    const gender = document.querySelector('input[name=gender]:checked');
-    gender ? hide('err-gender') : show('err-gender');
+    document.querySelector('input[name=gender]:checked') ? hide('err-gender') : show('err-gender');
     document.getElementById('birthDate').value ? hide('err-birthDate') : show('err-birthDate');
     document.getElementById('nationality').value ? hide('err-nationality') : show('err-nationality');
     document.getElementById('zipCode').value ? hide('err-zipCode') : show('err-zipCode');
     document.getElementById('prefecture').value ? hide('err-prefecture') : show('err-prefecture');
     document.getElementById('city').value.trim() ? hide('err-city') : show('err-city');
     document.getElementById('phone').value.trim() ? hide('err-phone') : show('err-phone');
-    const email = document.getElementById('email').value.trim();
-    (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) ? hide('err-email') : show('err-email');
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value.trim()) ? hide('err-email') : show('err-email');
   }
-
   if (step === 2) {
     document.getElementById('visaStatus').value ? hide('err-visaStatus') : show('err-visaStatus');
     document.getElementById('visaExpiry').value ? hide('err-visaExpiry') : show('err-visaExpiry');
   }
-
   if (step === 3) {
-    const regionChecked = document.querySelector('input[name=workRegion]:checked');
-    regionChecked ? hide('err-workRegion') : show('err-workRegion');
+    document.querySelector('input[name=workRegion]:checked') ? hide('err-workRegion') : show('err-workRegion');
     document.getElementById('occupation').value ? hide('err-occupation') : show('err-occupation');
   }
-
   if (step === 4) {
-    // 必須書類チェック：顔写真・在留カード表裏・履歴書
-    const requiredDocs = ['photo','cardFront','cardBack','resume'];
-    requiredDocs.forEach(fieldId => {
-      const fileInput = document.getElementById(fieldId);
-      const fileInput2 = fieldId === 'photo' ? document.getElementById('photo_camera') : null;
+    ['photo','cardFront','cardBack','resume'].forEach(fieldId => {
+      const fi = document.getElementById(fieldId);
+      const fi2 = fieldId === 'photo' ? document.getElementById('photo_camera') : null;
       const laterCb = document.getElementById(fieldId + '_later');
-      const hasFile = (fileInput && fileInput.files && fileInput.files.length > 0)
-                   || (fileInput2 && fileInput2.files && fileInput2.files.length > 0);
+      const hasFile = (fi && fi.files && fi.files.length > 0) || (fi2 && fi2.files && fi2.files.length > 0);
       const hasLater = laterCb && laterCb.checked;
-      if (!hasFile && !hasLater) {
-        show('err-' + fieldId);
-      } else {
-        hide('err-' + fieldId);
-      }
+      hasFile || hasLater ? hide('err-' + fieldId) : show('err-' + fieldId);
     });
   }
-
   if (step === 5) {
     document.getElementById('consent').checked ? hide('err-consent') : show('err-consent');
   }
-
   return ok;
 }
 
-// ── ステップ移動 ──
 function nextStep(cur) {
-  if (!validateStep(cur)) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
+  if (!validateStep(cur)) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
   document.getElementById('step' + cur).style.display = 'none';
   currentStep = cur + 1;
   document.getElementById('step' + currentStep).style.display = 'block';
@@ -808,25 +782,18 @@ function prevStep(cur) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// ── ファイルをBase64に変換 ──
 function readFileAsBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = e => {
-      const base64 = e.target.result.split(',')[1];
-      resolve(base64);
-    };
+    reader.onload = e => resolve(e.target.result.split(',')[1]);
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
 }
 
-// ── 送信処理 ──
 async function submitForm() {
   if (!validateStep(5)) return;
-
   document.getElementById('loading-overlay').classList.add('show');
-
   try {
     const gender = document.querySelector('input[name=gender]:checked');
     const workRegions = [...document.querySelectorAll('input[name=workRegion]:checked')].map(cb => cb.value);
@@ -853,7 +820,6 @@ async function submitForm() {
     formData.append('occupation', document.getElementById('occupation').value);
     formData.append('notes', document.getElementById('notes').value.trim());
 
-    // ファイルフィールド処理
     const fileFields = [
       { id: 'photo', maxMB: 5 },
       { id: 'cardFront', maxMB: 2 },
@@ -868,8 +834,6 @@ async function submitForm() {
       const fi2 = id === 'photo' ? document.getElementById('photo_camera') : null;
       const laterCb = document.getElementById(id + '_later');
       const noneCb = document.getElementById(id + '_none');
-
-      // どちらのinputにファイルがあるか確認
       let file = null;
       if (fi && fi.files && fi.files[0]) file = fi.files[0];
       else if (fi2 && fi2.files && fi2.files[0]) file = fi2.files[0];
@@ -888,9 +852,7 @@ async function submitForm() {
 
     const res = await fetch(GAS_URL, { method: 'POST', body: formData });
     const json = await res.json();
-
     document.getElementById('loading-overlay').classList.remove('show');
-
     if (json.status === 'success') {
       for (let i = 1; i <= 5; i++) document.getElementById('step' + i).style.display = 'none';
       document.getElementById('successCard').classList.add('show');
@@ -900,11 +862,11 @@ async function submitForm() {
     }
   } catch (err) {
     document.getElementById('loading-overlay').classList.remove('show');
-    alert('通信エラーが発生しました。ネットワークを確認してください。\n' + err.toString());
+    alert('通信エラーが発生しました。\n' + err.toString());
   }
 }
 
-// スマホ判定：PCはカメラボタン非表示
+// スマホのみカメラボタン表示
 (function() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   if (!isMobile) {
