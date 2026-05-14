@@ -37,19 +37,18 @@
     input[type="radio"], input[type="checkbox"] { accent-color: #e63329; width: 16px; height: 16px; }
     .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
     .radio-group label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #333; cursor: pointer; margin-bottom: 0; }
-
-    /* 地方チェックボックス */
-    .region-list { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
-    .region-item { display: flex; align-items: center; gap: 5px; }
+    .zip-row { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 8px; }
+    .zip-row input { max-width: 160px; }
+    .zip-btn { background: #555; color: #fff; border: none; border-radius: 8px; padding: 10px 14px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+    .zip-btn:hover { background: #333; }
+    .zip-result { font-size: 12px; color: #e63329; margin-top: 4px; display: none; }
+    .region-item { display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
     .region-item label { font-size: 13px; color: #333; cursor: pointer; margin-bottom: 0; font-weight: 600; }
-
-    /* 都道府県展開エリア */
-    .pref-panel { display: none; background: #f0f4ff; border: 1px solid #c5d0f0; border-radius: 8px; padding: 12px 14px; margin-top: 10px; margin-bottom: 4px; }
+    .pref-panel { display: none; background: #f0f4ff; border: 1px solid #c5d0f0; border-radius: 8px; padding: 12px 14px; margin-top: 4px; margin-bottom: 8px; }
     .pref-panel.show { display: block; }
     .pref-panel-title { font-size: 11px; color: #5566aa; font-weight: 700; margin-bottom: 8px; }
     .pref-checks { display: flex; flex-wrap: wrap; gap: 8px 16px; }
     .pref-checks label { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #333; cursor: pointer; margin-bottom: 0; }
-
     .file-block { background: #fafafa; border: 1.5px dashed #ddd; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
     .file-block label.title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 10px; display: block; }
     .file-input-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -57,7 +56,11 @@
     .file-btn { background: #e63329; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; white-space: nowrap; }
     .file-btn:hover { background: #c0281f; }
     .file-btn:disabled { background: #aaa; cursor: not-allowed; }
+    .file-btn-camera { background: #2196F3; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+    .file-btn-camera:hover { background: #1565C0; }
     .file-name { font-size: 12px; color: #888; }
+    .photo-preview { display: none; margin-top: 10px; }
+    .photo-preview img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid #e63329; }
     .option-checks { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
     .option-check-row { display: flex; align-items: center; gap: 8px; }
     .option-check-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #e63329; }
@@ -71,6 +74,7 @@
     .btn-back { background: #f0f0f0; color: #555; border: none; border-radius: 10px; padding: 14px 20px; font-size: 14px; cursor: pointer; }
     .btn-back:hover { background: #e0e0e0; }
     .error-msg { color: #e63329; font-size: 11px; margin-top: 4px; display: none; }
+    .field-error input, .field-error select, .field-error textarea { border-color: #e63329; }
     .field-error .error-msg { display: block; }
     #complete-screen { display: none; text-align: center; padding: 60px 20px; }
     #complete-screen h2 { font-size: 22px; color: #e63329; margin-bottom: 16px; }
@@ -156,7 +160,7 @@
       <div class="form-row">
         <div class="form-group" id="g-birthDate">
           <label>生年月日 Date of Birth <span class="req">※</span></label>
-          <input type="date" id="birthDate">
+          <input type="date" id="birthDate" min="1950-01-01" max="2010-12-31">
           <span class="error-msg">生年月日を入力してください</span>
         </div>
         <div class="form-group" id="g-nationality">
@@ -191,9 +195,19 @@
         </div>
       </div>
 
+      <!-- 郵便番号＋住所自動補完 -->
+      <div class="form-group" style="margin-bottom:18px">
+        <label>郵便番号 Postal Code <span class="req">※</span></label>
+        <div class="zip-row">
+          <input type="text" id="zipCode" placeholder="例：0600001" maxlength="8" oninput="formatZip(this)">
+          <button type="button" class="zip-btn" onclick="lookupZip()">住所を検索</button>
+        </div>
+        <div id="zip-error" class="zip-result">郵便番号が見つかりませんでした</div>
+      </div>
+
       <div class="form-row">
         <div class="form-group" id="g-prefecture">
-          <label>現住所 都道府県 Prefecture <span class="req">※</span></label>
+          <label>都道府県 Prefecture <span class="req">※</span></label>
           <select id="prefecture">
             <option value="">選択 / Select</option>
             <option>北海道</option><option>青森県</option><option>岩手県</option><option>宮城県</option>
@@ -211,10 +225,16 @@
           </select>
           <span class="error-msg">都道府県を選択してください</span>
         </div>
-        <div class="form-group">
-          <label>住所詳細 Address <span class="opt">任意</span></label>
-          <input type="text" id="address" placeholder="市区町村以降">
+        <div class="form-group" id="g-city">
+          <label>市区町村 City <span class="req">※</span></label>
+          <input type="text" id="city" placeholder="例：札幌市中央区">
+          <span class="error-msg">市区町村を入力してください</span>
         </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:18px">
+        <label>住所詳細 Address Detail <span class="opt">任意</span></label>
+        <input type="text" id="address" placeholder="番地・建物名など">
       </div>
 
       <div class="form-row">
@@ -245,11 +265,14 @@
           <label>在留資格 Visa Status <span class="req">※</span></label>
           <select id="visaStatus">
             <option value="">選択 / Select</option>
+            <option>技能実習1号</option>
             <option>技能実習2号</option>
             <option>技能実習3号</option>
             <option>特定技能1号</option>
             <option>特定技能2号</option>
             <option>技術・人文知識・国際業務</option>
+            <option>介護ビザ（介護）</option>
+            <option>高度専門職1号</option>
             <option>永住者</option>
             <option>定住者</option>
             <option>日本人の配偶者等</option>
@@ -263,7 +286,7 @@
         </div>
         <div class="form-group" id="g-visaExpiry">
           <label>在留期限 Visa Expiry <span class="req">※</span></label>
-          <input type="date" id="visaExpiry">
+          <input type="date" id="visaExpiry" min="2020-01-01" max="2040-12-31">
           <span class="error-msg">在留期限を入力してください</span>
         </div>
       </div>
@@ -284,11 +307,8 @@
           <span style="font-weight:400;color:#aaa;font-size:11px;margin-left:4px">地方を選ぶと都道府県が表示されます</span>
         </label>
 
-        <!-- 地方チェックボックス＋都道府県展開 -->
         <div style="margin-top:8px">
-
-          <!-- 北海道・東北 -->
-          <div class="region-item" style="margin-bottom:6px">
+          <div class="region-item">
             <input type="checkbox" id="r_hokkaido" name="workRegion" value="北海道・東北" onchange="togglePref('hokkaido',this.checked)">
             <label for="r_hokkaido">北海道・東北</label>
           </div>
@@ -305,8 +325,7 @@
             </div>
           </div>
 
-          <!-- 関東 -->
-          <div class="region-item" style="margin-bottom:6px">
+          <div class="region-item">
             <input type="checkbox" id="r_kanto" name="workRegion" value="関東" onchange="togglePref('kanto',this.checked)">
             <label for="r_kanto">関東</label>
           </div>
@@ -323,8 +342,7 @@
             </div>
           </div>
 
-          <!-- 中部・東海 -->
-          <div class="region-item" style="margin-bottom:6px">
+          <div class="region-item">
             <input type="checkbox" id="r_chubu" name="workRegion" value="中部・東海" onchange="togglePref('chubu',this.checked)">
             <label for="r_chubu">中部・東海</label>
           </div>
@@ -344,8 +362,7 @@
             </div>
           </div>
 
-          <!-- 関西 -->
-          <div class="region-item" style="margin-bottom:6px">
+          <div class="region-item">
             <input type="checkbox" id="r_kansai" name="workRegion" value="関西" onchange="togglePref('kansai',this.checked)">
             <label for="r_kansai">関西</label>
           </div>
@@ -361,8 +378,7 @@
             </div>
           </div>
 
-          <!-- 中国・四国 -->
-          <div class="region-item" style="margin-bottom:6px">
+          <div class="region-item">
             <input type="checkbox" id="r_chugoku" name="workRegion" value="中国・四国" onchange="togglePref('chugoku',this.checked)">
             <label for="r_chugoku">中国・四国</label>
           </div>
@@ -381,8 +397,7 @@
             </div>
           </div>
 
-          <!-- 九州・沖縄 -->
-          <div class="region-item" style="margin-bottom:6px">
+          <div class="region-item">
             <input type="checkbox" id="r_kyushu" name="workRegion" value="九州・沖縄" onchange="togglePref('kyushu',this.checked)">
             <label for="r_kyushu">九州・沖縄</label>
           </div>
@@ -400,17 +415,14 @@
             </div>
           </div>
 
-          <!-- 未定 -->
-          <div class="region-item" style="margin-bottom:6px">
+          <div class="region-item">
             <input type="checkbox" id="r_undecided" name="workRegion" value="未定" onchange="toggleUndecided(this.checked)">
             <label for="r_undecided">未定 / Undecided</label>
           </div>
-
         </div>
         <span class="error-msg" id="err-workRegion">希望勤務地を選択してください</span>
       </div>
 
-      <!-- 希望職種 -->
       <div class="form-group" id="g-occupation" style="margin-bottom:18px">
         <label>希望職種 Preferred Job <span class="req">※</span></label>
         <select id="occupation">
@@ -487,8 +499,41 @@
     <!-- STEP 4 書類アップロード -->
     <div class="card step-card" id="step4" style="display:none">
       <h2>書類アップロード <span>Document Upload</span></h2>
-      <p class="desc">各書類を添付してください。後日提出可能な書類は「後日送付」を選択してください。<br>ファイルサイズ上限：2MB / Max file size: 2MB</p>
+      <p class="desc">各書類を添付してください。後日提出可能な書類は「後日送付」を選択してください。<br>書類：2MB上限 / 顔写真：5MB上限</p>
 
+      <!-- 顔写真 -->
+      <div class="file-block">
+        <label class="title">顔写真 Profile Photo <span class="req">※</span>
+          <span style="font-weight:400;color:#aaa;font-size:11px;margin-left:4px">5MB以内 / Within 5MB</span>
+        </label>
+        <div class="file-input-wrap">
+          <!-- ファイル選択（PC・スマホ共通） -->
+          <button type="button" class="file-btn" id="btn-photo" onclick="document.getElementById('photo').click()">
+            📁 ファイルを選択
+          </button>
+          <!-- カメラ起動（スマホ専用） -->
+          <button type="button" class="file-btn-camera" id="btn-photo-camera" onclick="document.getElementById('photo-camera').click()">
+            📷 カメラで撮影
+          </button>
+          <!-- ファイル選択用（カメラロール含む） -->
+          <input type="file" id="photo" accept="image/*" onchange="showPhotoPreview(this)">
+          <!-- カメラ直接起動用 -->
+          <input type="file" id="photo-camera" accept="image/*" capture="user" onchange="showPhotoPreview(this)">
+          <span class="file-name" id="photo-name">未選択</span>
+        </div>
+        <!-- プレビュー -->
+        <div class="photo-preview" id="photo-preview">
+          <img id="photo-preview-img" src="" alt="顔写真プレビュー">
+        </div>
+        <div class="option-checks">
+          <div class="option-check-row">
+            <input type="checkbox" id="photo_later" onchange="toggleOption('photo','photo_later','後日送付')">
+            <label for="photo_later">後日送付 / Send later</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 在留カード表 -->
       <div class="file-block">
         <label class="title">在留カード（表） Residence Card Front <span class="req">※</span></label>
         <div class="file-input-wrap">
@@ -504,6 +549,7 @@
         </div>
       </div>
 
+      <!-- 在留カード裏 -->
       <div class="file-block">
         <label class="title">在留カード（裏） Residence Card Back <span class="req">※</span></label>
         <div class="file-input-wrap">
@@ -519,6 +565,7 @@
         </div>
       </div>
 
+      <!-- JLPT -->
       <div class="file-block">
         <label class="title">JLPT日本語能力試験 証明書 <span class="opt">任意</span></label>
         <div class="file-input-wrap">
@@ -538,6 +585,7 @@
         </div>
       </div>
 
+      <!-- 特定技能評価証明書 -->
       <div class="file-block">
         <label class="title">特定技能評価証明書 SSW Certificate <span class="opt">任意</span></label>
         <div class="file-input-wrap">
@@ -557,6 +605,7 @@
         </div>
       </div>
 
+      <!-- 履歴書 -->
       <div class="file-block">
         <label class="title">履歴書 Resume / CV <span class="req">※</span></label>
         <div class="file-input-wrap">
@@ -631,40 +680,75 @@
   let currentStep = 1;
   const totalSteps = 5;
 
-  // 地方チェックで都道府県パネルを開閉
-  function togglePref(regionKey, checked) {
-    const panel = document.getElementById('pref-' + regionKey);
-    if (checked) {
-      panel.classList.add('show');
+  // 郵便番号フォーマット（ハイフン自動挿入）
+  function formatZip(input) {
+    let v = input.value.replace(/[^0-9]/g, '');
+    if (v.length > 3) v = v.slice(0,3) + '-' + v.slice(3,7);
+    input.value = v;
+  }
+
+  // 郵便番号から住所検索（zipcloud API）
+  async function lookupZip() {
+    const raw = document.getElementById('zipCode').value.replace(/-/g,'');
+    const errEl = document.getElementById('zip-error');
+    errEl.style.display = 'none';
+    if (raw.length !== 7) { errEl.textContent = '7桁の郵便番号を入力してください'; errEl.style.display = 'block'; return; }
+    try {
+      const res = await fetch('https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + raw);
+      const data = await res.json();
+      if (data.results && data.results[0]) {
+        const r = data.results[0];
+        // 都道府県をセレクトボックスに反映
+        const prefSel = document.getElementById('prefecture');
+        for (let i = 0; i < prefSel.options.length; i++) {
+          if (prefSel.options[i].text === r.address1) { prefSel.selectedIndex = i; break; }
+        }
+        // 市区町村を自動入力
+        document.getElementById('city').value = r.address2 + (r.address3 || '');
+        // エラー消去
+        document.getElementById('g-prefecture').classList.remove('field-error');
+        document.getElementById('g-city').classList.remove('field-error');
+      } else {
+        errEl.textContent = '郵便番号が見つかりませんでした';
+        errEl.style.display = 'block';
+      }
+    } catch(err) {
+      errEl.textContent = '住所検索に失敗しました。手動で入力してください。';
+      errEl.style.display = 'block';
+    }
+  }
+
+  // 顔写真プレビュー
+  function showPhotoPreview(input) {
+    const nameSpan = document.getElementById('photo-name');
+    const preview  = document.getElementById('photo-preview');
+    const previewImg = document.getElementById('photo-preview-img');
+    // 両方のinputのファイルを同期
+    const otherInputId = (input.id === 'photo') ? 'photo-camera' : 'photo';
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      if (file.size > 5 * 1024 * 1024) {
+        alert('ファイルサイズが5MBを超えています。\nFile size exceeds 5MB.');
+        input.value = '';
+        nameSpan.textContent = '未選択';
+        preview.style.display = 'none';
+        return;
+      }
+      nameSpan.textContent = file.name;
+      preview.style.display = 'block';
+      const reader = new FileReader();
+      reader.onload = (e) => { previewImg.src = e.target.result; };
+      reader.readAsDataURL(file);
+      // 後日送付チェックを解除
+      const laterChk = document.getElementById('photo_later');
+      if (laterChk) laterChk.checked = false;
+      const btn = document.getElementById('btn-photo');
+      const btnCam = document.getElementById('btn-photo-camera');
+      if (btn) btn.disabled = false;
+      if (btnCam) btnCam.disabled = false;
     } else {
-      panel.classList.remove('show');
-      // 都道府県チェックを全解除
-      panel.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
-    }
-    // 未定との排他
-    if (checked) {
-      document.getElementById('r_undecided').checked = false;
-    }
-  }
-
-  // 未定を選ぶと他を全解除
-  function toggleUndecided(checked) {
-    if (checked) {
-      ['hokkaido','kanto','chubu','kansai','chugoku','kyushu'].forEach(key => {
-        document.getElementById('r_' + key).checked = false;
-        const panel = document.getElementById('pref-' + key);
-        panel.classList.remove('show');
-        panel.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
-      });
-    }
-  }
-
-  function updateProgress(step) {
-    document.getElementById('progress-fill').style.width = (step / totalSteps * 100) + '%';
-    document.getElementById('progress-label').textContent = 'STEP ' + step + ' / ' + totalSteps;
-    for (let i = 1; i <= totalSteps; i++) {
-      const el = document.getElementById('lbl' + i);
-      if (el) el.className = (i === step) ? 'active' : '';
+      nameSpan.textContent = '未選択';
+      preview.style.display = 'none';
     }
   }
 
@@ -692,25 +776,61 @@
   }
 
   function toggleOption(fieldId, checkId, statusLabel) {
-    const thisChk  = document.getElementById(checkId);
-    const fileInput = document.getElementById(fieldId);
-    const btn      = document.getElementById('btn-' + fieldId);
-    const nameSpan = document.getElementById(fieldId + '-name');
+    const thisChk   = document.getElementById(checkId);
+    const fileInput  = document.getElementById(fieldId);
+    const fileInput2 = document.getElementById(fieldId + '-camera');
+    const btn        = document.getElementById('btn-' + fieldId);
+    const btnCam     = document.getElementById('btn-' + fieldId + '-camera');
+    const nameSpan   = document.getElementById(fieldId + '-name');
+    const preview    = document.getElementById(fieldId + '-preview');
     if (thisChk.checked) {
       ['_later','_none'].forEach(suffix => {
         const otherId = fieldId + suffix;
-        if (otherId !== checkId) {
-          const other = document.getElementById(otherId);
-          if (other) other.checked = false;
-        }
+        if (otherId !== checkId) { const o = document.getElementById(otherId); if (o) o.checked = false; }
       });
-      if (fileInput) { fileInput.value = ''; fileInput.disabled = true; }
-      if (btn)       { btn.disabled = true; }
-      if (nameSpan)  { nameSpan.textContent = statusLabel; }
+      if (fileInput)  { fileInput.value  = ''; fileInput.disabled  = true; }
+      if (fileInput2) { fileInput2.value = ''; fileInput2.disabled = true; }
+      if (btn)    btn.disabled = true;
+      if (btnCam) btnCam.disabled = true;
+      if (nameSpan) nameSpan.textContent = statusLabel;
+      if (preview)  preview.style.display = 'none';
     } else {
-      if (fileInput) fileInput.disabled = false;
-      if (btn)       btn.disabled = false;
-      if (nameSpan)  nameSpan.textContent = '未選択';
+      if (fileInput)  fileInput.disabled  = false;
+      if (fileInput2) fileInput2.disabled = false;
+      if (btn)    btn.disabled = false;
+      if (btnCam) btnCam.disabled = false;
+      if (nameSpan) nameSpan.textContent = '未選択';
+    }
+  }
+
+  function togglePref(regionKey, checked) {
+    const panel = document.getElementById('pref-' + regionKey);
+    if (checked) {
+      panel.classList.add('show');
+      document.getElementById('r_undecided').checked = false;
+    } else {
+      panel.classList.remove('show');
+      panel.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+    }
+  }
+
+  function toggleUndecided(checked) {
+    if (checked) {
+      ['hokkaido','kanto','chubu','kansai','chugoku','kyushu'].forEach(key => {
+        document.getElementById('r_' + key).checked = false;
+        const panel = document.getElementById('pref-' + key);
+        panel.classList.remove('show');
+        panel.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+      });
+    }
+  }
+
+  function updateProgress(step) {
+    document.getElementById('progress-fill').style.width = (step / totalSteps * 100) + '%';
+    document.getElementById('progress-label').textContent = 'STEP ' + step + ' / ' + totalSteps;
+    for (let i = 1; i <= totalSteps; i++) {
+      const el = document.getElementById('lbl' + i);
+      if (el) el.className = (i === step) ? 'active' : '';
     }
   }
 
@@ -721,7 +841,7 @@
     const val = (id) => (document.getElementById(id) || {}).value || '';
 
     if (step === 1) {
-      ['lastName','firstName','lastNameKana','firstNameKana','birthDate','nationality','prefecture','phone','email'].forEach(clearError);
+      ['lastName','firstName','lastNameKana','firstNameKana','birthDate','nationality','prefecture','city','phone','email'].forEach(clearError);
       if (!val('lastName'))      setError('lastName');
       if (!val('firstName'))     setError('firstName');
       if (!val('lastNameKana'))  setError('lastNameKana');
@@ -737,17 +857,16 @@
       if (!val('birthDate'))   setError('birthDate');
       if (!val('nationality')) setError('nationality');
       if (!val('prefecture'))  setError('prefecture');
+      if (!val('city'))        setError('city');
       if (!val('phone'))       setError('phone');
       const emailVal = val('email');
       if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) setError('email');
     }
-
     if (step === 2) {
       ['visaStatus','visaExpiry'].forEach(clearError);
       if (!val('visaStatus')) setError('visaStatus');
       if (!val('visaExpiry')) setError('visaExpiry');
     }
-
     if (step === 3) {
       const regions = document.querySelectorAll('input[name="workRegion"]:checked');
       if (regions.length === 0) {
@@ -761,7 +880,6 @@
       clearError('occupation');
       if (!val('occupation')) setError('occupation');
     }
-
     if (step === 5) {
       const consent = document.getElementById('consentCheck');
       const errConsent = document.getElementById('err-consent');
@@ -798,18 +916,23 @@
     });
   }
 
+  // 顔写真：2つのinputのうち実際にファイルが入っている方を取得
+  function getPhotoFile() {
+    const f1 = document.getElementById('photo');
+    const f2 = document.getElementById('photo-camera');
+    if (f1 && !f1.disabled && f1.files && f1.files[0]) return f1.files[0];
+    if (f2 && !f2.disabled && f2.files && f2.files[0]) return f2.files[0];
+    return null;
+  }
+
   async function submitForm() {
     if (!validateStep(5)) return;
     document.getElementById('loading-overlay').classList.add('show');
 
-    const workRegions = Array.from(document.querySelectorAll('input[name="workRegion"]:checked'))
-      .map(cb => cb.value).join('、');
-    const workPrefs = Array.from(document.querySelectorAll('input[name="workPref"]:checked'))
-      .map(cb => cb.value).join('、');
+    const workRegions = Array.from(document.querySelectorAll('input[name="workRegion"]:checked')).map(cb => cb.value).join('、');
+    const workPrefs   = Array.from(document.querySelectorAll('input[name="workPref"]:checked')).map(cb => cb.value).join('、');
 
-    const fileFields = ['cardFront','cardBack','jlpt','ssw','resume'];
     const formData = new FormData();
-
     formData.append('lastName',       document.getElementById('lastName').value);
     formData.append('firstName',      document.getElementById('firstName').value);
     formData.append('lastNameKana',   document.getElementById('lastNameKana').value);
@@ -817,7 +940,9 @@
     formData.append('gender',         (document.querySelector('input[name="gender"]:checked') || {}).value || '');
     formData.append('birthDate',      document.getElementById('birthDate').value);
     formData.append('nationality',    document.getElementById('nationality').value);
+    formData.append('zipCode',        document.getElementById('zipCode').value);
     formData.append('prefecture',     document.getElementById('prefecture').value);
+    formData.append('city',           document.getElementById('city').value);
     formData.append('address',        document.getElementById('address').value);
     formData.append('phone',          document.getElementById('phone').value);
     formData.append('email',          document.getElementById('email').value);
@@ -828,6 +953,22 @@
     formData.append('occupation',     document.getElementById('occupation').value);
     formData.append('notes',          document.getElementById('notes').value);
 
+    // 顔写真
+    const photoFile = getPhotoFile();
+    const photoLater = document.getElementById('photo_later');
+    if (photoFile) {
+      const base64 = await fileToBase64(photoFile);
+      if (base64) {
+        formData.append('photo_data', base64);
+        formData.append('photo_name', photoFile.name);
+        formData.append('photo_type', photoFile.type);
+      }
+    } else if (photoLater && photoLater.checked) {
+      formData.append('photo_later', 'true');
+    }
+
+    // 書類ファイル
+    const fileFields = ['cardFront','cardBack','jlpt','ssw','resume'];
     for (const id of fileFields) {
       const inp      = document.getElementById(id);
       const laterChk = document.getElementById(id + '_later');
