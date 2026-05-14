@@ -48,18 +48,23 @@
     .date-row select { flex: 1; min-height: 44px; }
     .date-row span { font-size: 13px; color: #555; white-space: nowrap; }
 
-    /* チェックボックス職種 */
-    .occupation-group { margin-bottom: 12px; }
-    .occupation-group .group-label {
-      font-size: 12px; font-weight: 700; color: #ff6b35;
-      background: #fff5f0; padding: 4px 10px; border-radius: 4px;
-      margin-bottom: 8px; display: block;
-    }
-    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    .checkbox-item { display: flex; align-items: flex-start; gap: 6px; cursor: pointer; }
-    .checkbox-item input[type=checkbox] { margin-top: 2px; accent-color: #ff6b35; min-width: 16px; }
-    .checkbox-item span { font-size: 13px; line-height: 1.4; }
-    @media(max-width: 400px) { .checkbox-grid { grid-template-columns: 1fr; } }
+    /* ボタン式複数選択（地方・都道府県・職種共通） */
+    .btn-select-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .btn-select { padding: 8px 14px; border: 2px solid #ddd; border-radius: 20px; font-size: 13px; background: #fff; cursor: pointer; transition: all .2s; user-select: none; -webkit-user-select: none; }
+    .btn-select.selected { background: #ff6b35; border-color: #ff6b35; color: #fff; font-weight: 600; }
+    .btn-select:hover { border-color: #ff6b35; }
+
+    /* 都道府県エリア */
+    .pref-area { display: none; margin-top: 12px; padding: 14px; background: #f9f9f9; border-radius: 8px; }
+    .pref-area.show { display: block; }
+    .pref-area .pref-title { font-size: 12px; font-weight: 700; color: #888; margin-bottom: 8px; }
+
+    /* 職種グループ */
+    .occ-group { margin-bottom: 16px; }
+    .occ-group-label { font-size: 12px; font-weight: 700; color: #ff6b35; background: #fff5f0; padding: 4px 10px; border-radius: 4px; margin-bottom: 8px; display: block; }
+
+    .error-msg { color: #e74c3c; font-size: 12px; margin-top: 4px; display: none; }
+    .error-msg.show { display: block; }
 
     .file-block { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
     .file-block:last-child { border-bottom: none; }
@@ -72,15 +77,16 @@
     .file-options { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
     .file-options label { font-size: 13px; font-weight: 400; display: flex; align-items: center; gap: 4px; cursor: pointer; }
     .file-preview { margin-top: 8px; max-width: 120px; max-height: 120px; border-radius: 6px; object-fit: cover; display: none; }
-    .error-msg { color: #e74c3c; font-size: 12px; margin-top: 4px; display: none; }
-    .error-msg.show { display: block; }
+
     .btn-wrap { display: flex; gap: 12px; margin-top: 8px; }
     .btn-next { flex: 1; padding: 14px; background: linear-gradient(90deg,#ff6b35,#f7931e); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; }
     .btn-back { padding: 14px 20px; background: #f0f0f0; color: #555; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; }
     .btn-next:hover { opacity: .9; }
+
     .consent-box { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 16px; font-size: 11px; color: #555; line-height: 1.8; max-height: 220px; overflow-y: auto; margin-bottom: 16px; white-space: pre-wrap; }
     .consent-check { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
     .consent-check input { margin-top: 2px; accent-color: #ff6b35; }
+
     .step { display: none; }
     .step.active { display: block; }
     .complete-card { text-align: center; padding: 40px 24px; }
@@ -95,7 +101,6 @@
     <h1>TRYBALUNIT</h1>
     <p>Entry Form | エントリーフォーム</p>
   </div>
-
   <div class="progress-wrap">
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
     <div class="progress-label" id="progressLabel">STEP 1 / 5</div>
@@ -104,7 +109,7 @@
   <!-- STEP 1: 基本情報 -->
   <div class="step active" id="step1">
     <div class="card">
-      <h2>基本情報 <span>Basic Information</span></h2>
+      <h2>基本情報 <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px;">Basic Information</span></h2>
       <p class="desc">※は必須項目です / Required fields are marked with ※</p>
 
       <div class="form-row">
@@ -158,8 +163,29 @@
 
       <div class="form-group">
         <label>国籍 Nationality <span class="req">※</span></label>
-        <input type="text" id="nationality" placeholder="例：ベトナム / Vietnam">
-        <div class="error-msg" id="err-nationality">国籍を入力してください</div>
+        <select id="nationality">
+          <option value="">選択してください / Select</option>
+          <option value="ベトナム">ベトナム / Vietnam</option>
+          <option value="中国">中国 / China</option>
+          <option value="フィリピン">フィリピン / Philippines</option>
+          <option value="インドネシア">インドネシア / Indonesia</option>
+          <option value="ミャンマー">ミャンマー / Myanmar</option>
+          <option value="カンボジア">カンボジア / Cambodia</option>
+          <option value="タイ">タイ / Thailand</option>
+          <option value="ネパール">ネパール / Nepal</option>
+          <option value="バングラデシュ">バングラデシュ / Bangladesh</option>
+          <option value="スリランカ">スリランカ / Sri Lanka</option>
+          <option value="インド">インド / India</option>
+          <option value="パキスタン">パキスタン / Pakistan</option>
+          <option value="モンゴル">モンゴル / Mongolia</option>
+          <option value="韓国">韓国 / South Korea</option>
+          <option value="台湾">台湾 / Taiwan</option>
+          <option value="ブラジル">ブラジル / Brazil</option>
+          <option value="ペルー">ペルー / Peru</option>
+          <option value="ウズベキスタン">ウズベキスタン / Uzbekistan</option>
+          <option value="その他">その他 / Other</option>
+        </select>
+        <div class="error-msg" id="err-nationality">国籍を選択してください</div>
       </div>
 
       <div class="form-group">
@@ -183,13 +209,13 @@
   <!-- STEP 2: 在留・住所情報 -->
   <div class="step" id="step2">
     <div class="card">
-      <h2>在留・住所情報 <span>Visa & Address</span></h2>
+      <h2>在留・住所情報 <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px;">Visa & Address</span></h2>
 
       <div class="form-group">
         <label>在留資格 Visa Status <span class="req">※</span></label>
-        <select id="visaStatus">
+        <select id="visaStatus" onchange="handleVisaChange()">
           <option value="">選択してください / Select</option>
-          <option value="技術・人文知識・国際業務">技術・人文知識・国際業務 / Engineer・Humanities・International</option>
+          <option value="技術・人文知識・国際業務">技術・人文知識・国際業務 / Engineer・Humanities</option>
           <option value="特定技能1号">特定技能1号 / Specified Skilled Worker 1</option>
           <option value="特定技能2号">特定技能2号 / Specified Skilled Worker 2</option>
           <option value="技能実習1号">技能実習1号 / Technical Intern Training 1</option>
@@ -207,7 +233,7 @@
         <div class="error-msg" id="err-visaStatus">在留資格を選択してください</div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="visaExpiryGroup">
         <label>在留期限 Visa Expiry <span class="req">※</span></label>
         <div class="date-row">
           <select id="visaYear"><option value="">年 / Year</option></select>
@@ -275,181 +301,241 @@
   <!-- STEP 3: 希望条件 -->
   <div class="step" id="step3">
     <div class="card">
-      <h2>希望条件 <span>Job Preferences</span></h2>
+      <h2>希望条件 <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px;">Job Preferences</span></h2>
 
+      <!-- 希望勤務地（地方） -->
       <div class="form-group">
         <label>希望勤務地（地方） Preferred Region <span class="req">※</span></label>
-        <select id="workRegion">
-          <option value="">選択してください / Select</option>
-          <option value="北海道">北海道 / Hokkaido</option>
-          <option value="東北">東北 / Tohoku</option>
-          <option value="関東">関東 / Kanto</option>
-          <option value="中部">中部 / Chubu</option>
-          <option value="近畿">近畿 / Kinki</option>
-          <option value="中国">中国 / Chugoku</option>
-          <option value="四国">四国 / Shikoku</option>
-          <option value="九州・沖縄">九州・沖縄 / Kyushu・Okinawa</option>
-          <option value="未定">未定 / Undecided</option>
-        </select>
-        <div class="error-msg" id="err-workRegion">希望勤務地（地方）を選択してください</div>
+        <div class="btn-select-group" id="regionBtns">
+          <div class="btn-select" onclick="toggleRegion(this,'北海道・東北')">北海道・東北</div>
+          <div class="btn-select" onclick="toggleRegion(this,'関東')">関東</div>
+          <div class="btn-select" onclick="toggleRegion(this,'中部')">中部</div>
+          <div class="btn-select" onclick="toggleRegion(this,'近畿')">近畿</div>
+          <div class="btn-select" onclick="toggleRegion(this,'中国')">中国</div>
+          <div class="btn-select" onclick="toggleRegion(this,'四国')">四国</div>
+          <div class="btn-select" onclick="toggleRegion(this,'九州・沖縄')">九州・沖縄</div>
+          <div class="btn-select" onclick="toggleRegion(this,'未定')">勤務地未定</div>
+        </div>
+        <div class="error-msg" id="err-workRegion">希望勤務地を選択してください</div>
       </div>
 
-      <div class="form-group">
+      <!-- 都道府県（地方選択に連動して表示） -->
+      <div class="form-group" id="prefAreaWrap">
         <label>希望都道府県 Preferred Prefecture <span class="opt">任意 / Optional</span></label>
-        <select id="workPrefecture">
-          <option value="">選択してください / Select</option>
-          <option value="北海道">北海道</option><option value="青森県">青森県</option><option value="岩手県">岩手県</option>
-          <option value="宮城県">宮城県</option><option value="秋田県">秋田県</option><option value="山形県">山形県</option>
-          <option value="福島県">福島県</option><option value="茨城県">茨城県</option><option value="栃木県">栃木県</option>
-          <option value="群馬県">群馬県</option><option value="埼玉県">埼玉県</option><option value="千葉県">千葉県</option>
-          <option value="東京都">東京都</option><option value="神奈川県">神奈川県</option><option value="新潟県">新潟県</option>
-          <option value="富山県">富山県</option><option value="石川県">石川県</option><option value="福井県">福井県</option>
-          <option value="山梨県">山梨県</option><option value="長野県">長野県</option><option value="岐阜県">岐阜県</option>
-          <option value="静岡県">静岡県</option><option value="愛知県">愛知県</option><option value="三重県">三重県</option>
-          <option value="滋賀県">滋賀県</option><option value="京都府">京都府</option><option value="大阪府">大阪府</option>
-          <option value="兵庫県">兵庫県</option><option value="奈良県">奈良県</option><option value="和歌山県">和歌山県</option>
-          <option value="鳥取県">鳥取県</option><option value="島根県">島根県</option><option value="岡山県">岡山県</option>
-          <option value="広島県">広島県</option><option value="山口県">山口県</option><option value="徳島県">徳島県</option>
-          <option value="香川県">香川県</option><option value="愛媛県">愛媛県</option><option value="高知県">高知県</option>
-          <option value="福岡県">福岡県</option><option value="佐賀県">佐賀県</option><option value="長崎県">長崎県</option>
-          <option value="熊本県">熊本県</option><option value="大分県">大分県</option><option value="宮崎県">宮崎県</option>
-          <option value="鹿児島県">鹿児島県</option><option value="沖縄県">沖縄県</option>
-          <option value="未定">未定</option>
-        </select>
+
+        <div class="pref-area" id="pref-北海道・東北">
+          <div class="pref-title">北海道・東北</div>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="togglePref(this,'北海道')">北海道</div>
+            <div class="btn-select" onclick="togglePref(this,'青森県')">青森県</div>
+            <div class="btn-select" onclick="togglePref(this,'岩手県')">岩手県</div>
+            <div class="btn-select" onclick="togglePref(this,'宮城県')">宮城県</div>
+            <div class="btn-select" onclick="togglePref(this,'秋田県')">秋田県</div>
+            <div class="btn-select" onclick="togglePref(this,'山形県')">山形県</div>
+            <div class="btn-select" onclick="togglePref(this,'福島県')">福島県</div>
+          </div>
+        </div>
+
+        <div class="pref-area" id="pref-関東">
+          <div class="pref-title">関東</div>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="togglePref(this,'茨城県')">茨城県</div>
+            <div class="btn-select" onclick="togglePref(this,'栃木県')">栃木県</div>
+            <div class="btn-select" onclick="togglePref(this,'群馬県')">群馬県</div>
+            <div class="btn-select" onclick="togglePref(this,'埼玉県')">埼玉県</div>
+            <div class="btn-select" onclick="togglePref(this,'千葉県')">千葉県</div>
+            <div class="btn-select" onclick="togglePref(this,'東京都')">東京都</div>
+            <div class="btn-select" onclick="togglePref(this,'神奈川県')">神奈川県</div>
+          </div>
+        </div>
+
+        <div class="pref-area" id="pref-中部">
+          <div class="pref-title">中部</div>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="togglePref(this,'新潟県')">新潟県</div>
+            <div class="btn-select" onclick="togglePref(this,'富山県')">富山県</div>
+            <div class="btn-select" onclick="togglePref(this,'石川県')">石川県</div>
+            <div class="btn-select" onclick="togglePref(this,'福井県')">福井県</div>
+            <div class="btn-select" onclick="togglePref(this,'山梨県')">山梨県</div>
+            <div class="btn-select" onclick="togglePref(this,'長野県')">長野県</div>
+            <div class="btn-select" onclick="togglePref(this,'岐阜県')">岐阜県</div>
+            <div class="btn-select" onclick="togglePref(this,'静岡県')">静岡県</div>
+            <div class="btn-select" onclick="togglePref(this,'愛知県')">愛知県</div>
+          </div>
+        </div>
+
+        <div class="pref-area" id="pref-近畿">
+          <div class="pref-title">近畿</div>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="togglePref(this,'三重県')">三重県</div>
+            <div class="btn-select" onclick="togglePref(this,'滋賀県')">滋賀県</div>
+            <div class="btn-select" onclick="togglePref(this,'京都府')">京都府</div>
+            <div class="btn-select" onclick="togglePref(this,'大阪府')">大阪府</div>
+            <div class="btn-select" onclick="togglePref(this,'兵庫県')">兵庫県</div>
+            <div class="btn-select" onclick="togglePref(this,'奈良県')">奈良県</div>
+            <div class="btn-select" onclick="togglePref(this,'和歌山県')">和歌山県</div>
+          </div>
+        </div>
+
+        <div class="pref-area" id="pref-中国">
+          <div class="pref-title">中国</div>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="togglePref(this,'鳥取県')">鳥取県</div>
+            <div class="btn-select" onclick="togglePref(this,'島根県')">島根県</div>
+            <div class="btn-select" onclick="togglePref(this,'岡山県')">岡山県</div>
+            <div class="btn-select" onclick="togglePref(this,'広島県')">広島県</div>
+            <div class="btn-select" onclick="togglePref(this,'山口県')">山口県</div>
+          </div>
+        </div>
+
+        <div class="pref-area" id="pref-四国">
+          <div class="pref-title">四国</div>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="togglePref(this,'徳島県')">徳島県</div>
+            <div class="btn-select" onclick="togglePref(this,'香川県')">香川県</div>
+            <div class="btn-select" onclick="togglePref(this,'愛媛県')">愛媛県</div>
+            <div class="btn-select" onclick="togglePref(this,'高知県')">高知県</div>
+          </div>
+        </div>
+
+        <div class="pref-area" id="pref-九州・沖縄">
+          <div class="pref-title">九州・沖縄</div>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="togglePref(this,'福岡県')">福岡県</div>
+            <div class="btn-select" onclick="togglePref(this,'佐賀県')">佐賀県</div>
+            <div class="btn-select" onclick="togglePref(this,'長崎県')">長崎県</div>
+            <div class="btn-select" onclick="togglePref(this,'熊本県')">熊本県</div>
+            <div class="btn-select" onclick="togglePref(this,'大分県')">大分県</div>
+            <div class="btn-select" onclick="togglePref(this,'宮崎県')">宮崎県</div>
+            <div class="btn-select" onclick="togglePref(this,'鹿児島県')">鹿児島県</div>
+            <div class="btn-select" onclick="togglePref(this,'沖縄県')">沖縄県</div>
+          </div>
+        </div>
       </div>
 
+      <!-- 希望職種 -->
       <div class="form-group">
         <label>希望職種 Preferred Job Type <span class="req">※</span></label>
         <div class="error-msg" id="err-occupation">希望職種を1つ以上選択してください</div>
 
-        <!-- 特定技能 -->
-        <div class="occupation-group">
-          <span class="group-label">特定技能 / Specified Skilled Worker</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="介護"><span>介護 / Nursing Care</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="ビルクリーニング"><span>ビルクリーニング / Building Cleaning</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="工業製品製造業"><span>工業製品製造業 / Industrial Manufacturing</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="建設"><span>建設 / Construction</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="造船・船用工業"><span>造船・船用工業 / Shipbuilding</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="自動車整備"><span>自動車整備 / Auto Maintenance</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="航空"><span>航空 / Aviation</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="農業"><span>農業 / Agriculture</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="漁業"><span>漁業 / Fishery</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="飲食料品製造業"><span>飲食料品製造業 / Food Manufacturing</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="外食業"><span>外食業 / Restaurant Service</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="自動車運送業"><span>自動車運送業 / Road Transport</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="鉄道"><span>鉄道 / Railway</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="林業"><span>林業 / Forestry</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="木材産業"><span>木材産業 / Wood Industry</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="宿泊"><span>宿泊 / Accommodation</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="物流倉庫"><span>物流倉庫 / Logistics & Warehouse</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="リネンサプライ"><span>リネンサプライ / Linen Supply</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="資源循環"><span>資源循環 / Waste & Recycling</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">特定技能 / Specified Skilled Worker</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'介護')">介護</div>
+            <div class="btn-select" onclick="toggleOcc(this,'ビルクリーニング')">ビルクリーニング</div>
+            <div class="btn-select" onclick="toggleOcc(this,'工業製品製造業')">工業製品製造業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'建設')">建設</div>
+            <div class="btn-select" onclick="toggleOcc(this,'造船・船用工業')">造船・船用工業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'自動車整備')">自動車整備</div>
+            <div class="btn-select" onclick="toggleOcc(this,'航空')">航空</div>
+            <div class="btn-select" onclick="toggleOcc(this,'農業')">農業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'漁業')">漁業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'飲食料品製造業')">飲食料品製造業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'外食業')">外食業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'自動車運送業')">自動車運送業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'鉄道')">鉄道</div>
+            <div class="btn-select" onclick="toggleOcc(this,'林業')">林業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'木材産業')">木材産業</div>
+            <div class="btn-select" onclick="toggleOcc(this,'宿泊')">宿泊</div>
+            <div class="btn-select" onclick="toggleOcc(this,'物流倉庫')">物流倉庫</div>
+            <div class="btn-select" onclick="toggleOcc(this,'リネンサプライ')">リネンサプライ</div>
+            <div class="btn-select" onclick="toggleOcc(this,'資源循環')">資源循環</div>
           </div>
         </div>
 
-        <!-- 医療・介護・福祉 -->
-        <div class="occupation-group">
-          <span class="group-label">医療・介護・福祉 / Medical, Nursing & Welfare</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="介護福祉士"><span>介護福祉士 / Care Worker</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="ケアマネージャー"><span>ケアマネージャー / Care Manager</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="施設管理・マネージャー（医療・介護・福祉）"><span>施設管理・マネージャー / Facility Manager</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="看護助手"><span>看護助手 / Nursing Assistant</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="介護事務"><span>介護事務 / Care Office Work</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="医療・介護・福祉その他"><span>その他 / Other</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">医療・介護・福祉 / Medical, Nursing & Welfare</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'介護福祉士')">介護福祉士</div>
+            <div class="btn-select" onclick="toggleOcc(this,'ケアマネージャー')">ケアマネージャー</div>
+            <div class="btn-select" onclick="toggleOcc(this,'施設管理・マネージャー（医療・介護・福祉）')">施設管理・マネージャー</div>
+            <div class="btn-select" onclick="toggleOcc(this,'看護助手')">看護助手</div>
+            <div class="btn-select" onclick="toggleOcc(this,'介護事務')">介護事務</div>
+            <div class="btn-select" onclick="toggleOcc(this,'医療・介護・福祉その他')">その他</div>
           </div>
         </div>
 
-        <!-- 飲食・フード -->
-        <div class="occupation-group">
-          <span class="group-label">飲食・フード / Food & Beverage</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="ホールスタッフ"><span>ホールスタッフ / Hall Staff</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="キッチンスタッフ"><span>キッチンスタッフ / Kitchen Staff</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="ホール＋キッチン"><span>ホール＋キッチン / Hall & Kitchen</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="店長・マネージャー（飲食・フード）"><span>店長・マネージャー / Manager</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="飲食・フードその他"><span>その他 / Other</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">飲食・フード / Food & Beverage</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'ホールスタッフ')">ホールスタッフ</div>
+            <div class="btn-select" onclick="toggleOcc(this,'キッチンスタッフ')">キッチンスタッフ</div>
+            <div class="btn-select" onclick="toggleOcc(this,'ホール＋キッチン')">ホール＋キッチン</div>
+            <div class="btn-select" onclick="toggleOcc(this,'店長・マネージャー（飲食・フード）')">店長・マネージャー</div>
+            <div class="btn-select" onclick="toggleOcc(this,'飲食・フードその他')">その他</div>
           </div>
         </div>
 
-        <!-- サービス・清掃・警備 -->
-        <div class="occupation-group">
-          <span class="group-label">サービス・清掃・警備 / Service, Cleaning & Security</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="清掃員・ルームメイク"><span>清掃員・ルームメイク / Cleaner</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="ビル・ハウスクリーニング"><span>ビル・ハウスクリーニング / Building Cleaning</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="フロント・受付（サービス）"><span>フロント・受付 / Front Desk</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="警備"><span>警備 / Security</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="サービス・清掃・警備その他"><span>その他 / Other</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">サービス・清掃・警備 / Service, Cleaning & Security</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'清掃員・ルームメイク')">清掃員・ルームメイク</div>
+            <div class="btn-select" onclick="toggleOcc(this,'ビル・ハウスクリーニング')">ビル・ハウスクリーニング</div>
+            <div class="btn-select" onclick="toggleOcc(this,'フロント・受付（サービス）')">フロント・受付</div>
+            <div class="btn-select" onclick="toggleOcc(this,'警備')">警備</div>
+            <div class="btn-select" onclick="toggleOcc(this,'サービス・清掃・警備その他')">その他</div>
           </div>
         </div>
 
-        <!-- 製造・工場・倉庫 -->
-        <div class="occupation-group">
-          <span class="group-label">製造・工場・倉庫 / Manufacturing & Warehouse</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="食品製造・加工・検査・梱包"><span>食品製造・加工・検査・梱包 / Food Processing</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="製品製造・加工"><span>製品製造・加工 / Product Manufacturing</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="塗装・溶接・板金"><span>塗装・溶接・板金 / Painting & Welding</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="組立・検査・仕分け・ピッキング・梱包"><span>組立・検査・ピッキング / Assembly & Picking</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="製造・工場・倉庫その他"><span>その他 / Other</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">製造・工場・倉庫 / Manufacturing & Warehouse</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'食品製造・加工・検査・梱包')">食品製造・加工・検査・梱包</div>
+            <div class="btn-select" onclick="toggleOcc(this,'製品製造・加工')">製品製造・加工</div>
+            <div class="btn-select" onclick="toggleOcc(this,'塗装・溶接・板金')">塗装・溶接・板金</div>
+            <div class="btn-select" onclick="toggleOcc(this,'組立・検査・仕分け・ピッキング・梱包')">組立・検査・ピッキング</div>
+            <div class="btn-select" onclick="toggleOcc(this,'製造・工場・倉庫その他')">その他</div>
           </div>
         </div>
 
-        <!-- 建設・土木・設備 -->
-        <div class="occupation-group">
-          <span class="group-label">建設・土木・設備 / Construction & Civil Engineering</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="建設作業・土木"><span>建設作業・土木 / Civil Engineering</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="配管・電気工事"><span>配管・電気工事 / Plumbing & Electrical</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="塗装・左官"><span>塗装・左官 / Painting & Plastering</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="建設・設備その他"><span>その他 / Other</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">建設・土木・設備 / Construction & Civil Engineering</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'建設作業・土木')">建設作業・土木</div>
+            <div class="btn-select" onclick="toggleOcc(this,'配管・電気工事')">配管・電気工事</div>
+            <div class="btn-select" onclick="toggleOcc(this,'塗装・左官')">塗装・左官</div>
+            <div class="btn-select" onclick="toggleOcc(this,'建設・設備その他')">その他</div>
           </div>
         </div>
 
-        <!-- 農業・漁業・林業 -->
-        <div class="occupation-group">
-          <span class="group-label">農業・漁業・林業 / Agriculture, Fishery & Forestry</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="農作業・畜産"><span>農作業・畜産 / Farming & Livestock</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="漁業・養殖"><span>漁業・養殖 / Fishing & Aquaculture</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="林業・木材加工"><span>林業・木材加工 / Forestry & Lumber</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">農業・漁業・林業 / Agriculture, Fishery & Forestry</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'農作業・畜産')">農作業・畜産</div>
+            <div class="btn-select" onclick="toggleOcc(this,'漁業・養殖')">漁業・養殖</div>
+            <div class="btn-select" onclick="toggleOcc(this,'林業・木材加工')">林業・木材加工</div>
           </div>
         </div>
 
-        <!-- IT・エンジニア -->
-        <div class="occupation-group">
-          <span class="group-label">IT・エンジニア / IT & Engineering</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="システムエンジニア・プログラマー"><span>SE・プログラマー / SE & Programmer</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="ネットワーク・インフラエンジニア"><span>ネットワーク・インフラ / Network Engineer</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="ユーザーサポート・ヘルプデスク"><span>ユーザーサポート / User Support</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="IT・エンジニアその他"><span>その他 / Other</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">IT・エンジニア / IT & Engineering</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'システムエンジニア・プログラマー')">SE・プログラマー</div>
+            <div class="btn-select" onclick="toggleOcc(this,'ネットワーク・インフラエンジニア')">ネットワーク・インフラ</div>
+            <div class="btn-select" onclick="toggleOcc(this,'ユーザーサポート・ヘルプデスク')">ユーザーサポート</div>
+            <div class="btn-select" onclick="toggleOcc(this,'IT・エンジニアその他')">その他</div>
           </div>
         </div>
 
-        <!-- 事務・オフィスワーク -->
-        <div class="occupation-group">
-          <span class="group-label">事務・オフィスワーク / Office Work</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="一般事務"><span>一般事務 / General Office</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="経理事務"><span>経理事務 / Accounting</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="営業事務"><span>営業事務 / Sales Support</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="受付・秘書"><span>受付・秘書 / Reception & Secretary</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="貿易事務・国際事務"><span>貿易・国際事務 / Trade & International</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="人事・総務・法務"><span>人事・総務・法務 / HR & Legal</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="企画・マーケティング・広報"><span>企画・マーケティング / Marketing</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="電話対応・コールセンター"><span>コールセンター / Call Center</span></label>
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="事務・オフィスワークその他"><span>その他 / Other</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">事務・オフィスワーク / Office Work</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'一般事務')">一般事務</div>
+            <div class="btn-select" onclick="toggleOcc(this,'経理事務')">経理事務</div>
+            <div class="btn-select" onclick="toggleOcc(this,'営業事務')">営業事務</div>
+            <div class="btn-select" onclick="toggleOcc(this,'受付・秘書')">受付・秘書</div>
+            <div class="btn-select" onclick="toggleOcc(this,'貿易事務・国際事務')">貿易・国際事務</div>
+            <div class="btn-select" onclick="toggleOcc(this,'人事・総務・法務')">人事・総務・法務</div>
+            <div class="btn-select" onclick="toggleOcc(this,'企画・マーケティング・広報')">企画・マーケティング</div>
+            <div class="btn-select" onclick="toggleOcc(this,'電話対応・コールセンター')">コールセンター</div>
+            <div class="btn-select" onclick="toggleOcc(this,'事務・オフィスワークその他')">その他</div>
           </div>
         </div>
 
-        <!-- その他 -->
-        <div class="occupation-group">
-          <span class="group-label">その他 / Other</span>
-          <div class="checkbox-grid">
-            <label class="checkbox-item"><input type="checkbox" name="occupation" value="その他"><span>その他 / Other</span></label>
+        <div class="occ-group">
+          <span class="occ-group-label">その他 / Other</span>
+          <div class="btn-select-group">
+            <div class="btn-select" onclick="toggleOcc(this,'その他')">その他</div>
           </div>
         </div>
       </div>
@@ -469,19 +555,14 @@
   <!-- STEP 4: 書類アップロード -->
   <div class="step" id="step4">
     <div class="card">
-      <h2>書類アップロード <span>Document Upload</span></h2>
+      <h2>書類アップロード <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px;">Document Upload</span></h2>
       <p class="desc">各書類について「ファイルを添付」「後日送付」「未取得」のいずれかを選択してください。<br>Please attach each document or select an alternative option.</p>
 
-      <!-- 顔写真 -->
       <div class="file-block">
         <div class="title">顔写真 Profile Photo <span class="req">※</span></div>
         <div class="file-input-wrap">
-          <label class="file-btn file-btn-camera">
-            📷 カメラで撮影 <input type="file" id="photo" accept="image/*" capture="user" style="display:none" onchange="handleFile('photo',this)">
-          </label>
-          <label class="file-btn">
-            📁 ファイルを選択 <input type="file" id="photo2" accept="image/*" style="display:none" onchange="handleFile('photo',this)">
-          </label>
+          <label class="file-btn file-btn-camera">📷 カメラで撮影<input type="file" accept="image/*" capture="user" style="display:none" onchange="handleFile('photo',this)"></label>
+          <label class="file-btn">📁 ファイルを選択<input type="file" accept="image/*" style="display:none" onchange="handleFile('photo',this)"></label>
           <span class="file-name" id="photo-name">未選択</span>
         </div>
         <img class="file-preview" id="photo-preview">
@@ -492,16 +573,11 @@
         <div class="error-msg" id="err-photo">顔写真を添付するか、オプションを選択してください</div>
       </div>
 
-      <!-- 在留カード表 -->
       <div class="file-block">
         <div class="title">在留カード（表） Residence Card Front <span class="req">※</span></div>
         <div class="file-input-wrap">
-          <label class="file-btn file-btn-camera">
-            📷 カメラで撮影 <input type="file" id="cardFront" accept="image/*" capture="environment" style="display:none" onchange="handleFile('cardFront',this)">
-          </label>
-          <label class="file-btn">
-            📁 ファイルを選択 <input type="file" id="cardFront2" accept="image/*" style="display:none" onchange="handleFile('cardFront',this)">
-          </label>
+          <label class="file-btn file-btn-camera">📷 カメラで撮影<input type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFile('cardFront',this)"></label>
+          <label class="file-btn">📁 ファイルを選択<input type="file" accept="image/*" style="display:none" onchange="handleFile('cardFront',this)"></label>
           <span class="file-name" id="cardFront-name">未選択</span>
         </div>
         <img class="file-preview" id="cardFront-preview">
@@ -512,16 +588,11 @@
         <div class="error-msg" id="err-cardFront">在留カード（表）を添付するか、オプションを選択してください</div>
       </div>
 
-      <!-- 在留カード裏 -->
       <div class="file-block">
         <div class="title">在留カード（裏） Residence Card Back <span class="req">※</span></div>
         <div class="file-input-wrap">
-          <label class="file-btn file-btn-camera">
-            📷 カメラで撮影 <input type="file" id="cardBack" accept="image/*" capture="environment" style="display:none" onchange="handleFile('cardBack',this)">
-          </label>
-          <label class="file-btn">
-            📁 ファイルを選択 <input type="file" id="cardBack2" accept="image/*" style="display:none" onchange="handleFile('cardBack',this)">
-          </label>
+          <label class="file-btn file-btn-camera">📷 カメラで撮影<input type="file" accept="image/*" capture="environment" style="display:none" onchange="handleFile('cardBack',this)"></label>
+          <label class="file-btn">📁 ファイルを選択<input type="file" accept="image/*" style="display:none" onchange="handleFile('cardBack',this)"></label>
           <span class="file-name" id="cardBack-name">未選択</span>
         </div>
         <img class="file-preview" id="cardBack-preview">
@@ -532,16 +603,11 @@
         <div class="error-msg" id="err-cardBack">在留カード（裏）を添付するか、オプションを選択してください</div>
       </div>
 
-      <!-- JLPT -->
       <div class="file-block">
         <div class="title">JLPT日本語能力試験証明書 JLPT Certificate <span class="req">※</span></div>
         <div class="file-input-wrap">
-          <label class="file-btn file-btn-camera">
-            📷 カメラで撮影 <input type="file" id="jlpt" accept="image/*,application/pdf" capture="environment" style="display:none" onchange="handleFile('jlpt',this)">
-          </label>
-          <label class="file-btn">
-            📁 ファイルを選択 <input type="file" id="jlpt2" accept="image/*,application/pdf" style="display:none" onchange="handleFile('jlpt',this)">
-          </label>
+          <label class="file-btn file-btn-camera">📷 カメラで撮影<input type="file" accept="image/*,application/pdf" capture="environment" style="display:none" onchange="handleFile('jlpt',this)"></label>
+          <label class="file-btn">📁 ファイルを選択<input type="file" accept="image/*,application/pdf" style="display:none" onchange="handleFile('jlpt',this)"></label>
           <span class="file-name" id="jlpt-name">未選択</span>
         </div>
         <div class="file-options">
@@ -551,16 +617,11 @@
         <div class="error-msg" id="err-jlpt">JLPT証明書を添付するか、オプションを選択してください</div>
       </div>
 
-      <!-- 特定技能評価証明書 -->
       <div class="file-block">
         <div class="title">特定技能評価証明書 SSW Certificate <span class="req">※</span></div>
         <div class="file-input-wrap">
-          <label class="file-btn file-btn-camera">
-            📷 カメラで撮影 <input type="file" id="ssw" accept="image/*,application/pdf" capture="environment" style="display:none" onchange="handleFile('ssw',this)">
-          </label>
-          <label class="file-btn">
-            📁 ファイルを選択 <input type="file" id="ssw2" accept="image/*,application/pdf" style="display:none" onchange="handleFile('ssw',this)">
-          </label>
+          <label class="file-btn file-btn-camera">📷 カメラで撮影<input type="file" accept="image/*,application/pdf" capture="environment" style="display:none" onchange="handleFile('ssw',this)"></label>
+          <label class="file-btn">📁 ファイルを選択<input type="file" accept="image/*,application/pdf" style="display:none" onchange="handleFile('ssw',this)"></label>
           <span class="file-name" id="ssw-name">未選択</span>
         </div>
         <div class="file-options">
@@ -570,16 +631,11 @@
         <div class="error-msg" id="err-ssw">特定技能評価証明書を添付するか、オプションを選択してください</div>
       </div>
 
-      <!-- 履歴書 -->
       <div class="file-block">
         <div class="title">履歴書 Resume / CV <span class="req">※</span></div>
         <div class="file-input-wrap">
-          <label class="file-btn file-btn-camera">
-            📷 カメラで撮影 <input type="file" id="resume" accept="image/*,application/pdf" capture="environment" style="display:none" onchange="handleFile('resume',this)">
-          </label>
-          <label class="file-btn">
-            📁 ファイルを選択 <input type="file" id="resume2" accept="image/*,application/pdf" style="display:none" onchange="handleFile('resume',this)">
-          </label>
+          <label class="file-btn file-btn-camera">📷 カメラで撮影<input type="file" accept="image/*,application/pdf" capture="environment" style="display:none" onchange="handleFile('resume',this)"></label>
+          <label class="file-btn">📁 ファイルを選択<input type="file" accept="image/*,application/pdf" style="display:none" onchange="handleFile('resume',this)"></label>
           <span class="file-name" id="resume-name">未選択</span>
         </div>
         <div class="file-options">
@@ -599,7 +655,7 @@
   <!-- STEP 5: 個人情報同意・送信 -->
   <div class="step" id="step5">
     <div class="card">
-      <h2>個人情報の同意 <span>Privacy Policy</span></h2>
+      <h2>個人情報の同意 <span style="font-size:12px;color:#888;font-weight:400;margin-left:8px;">Privacy Policy</span></h2>
       <div class="consent-box">【個人情報の取り扱いについて】
 個人情報保護方針
 当社は、当社が業務上で使用する依頼者･取引関係者等の個人情報について、個人情報保護に関する法令及びその他の規範を遵守し、かつ国際的な動向にも配慮して自主的なルール及び体制を確立し、以下のとおり個人情報保護方針を定め、国民の権利擁護に寄与するため、これを実行し維持することを宣言いたします。
@@ -704,38 +760,114 @@ TEL: 03-5860-7565（受付時間　平日(月～金) 9:30～12:00, 13:00～16:30
   </div>
 
 </div>
-
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpJ2yqILVauYDq3ZnuXW_qhL9T5p1ZoZ-OhFkzwJPmIM0aBZouqKx5DGOIDDyC6O9cvg/exec';
 
 // ===== 日付プルダウン初期化 =====
 function initDateSelects() {
-  // 生年月日（年）
   const byEl = document.getElementById('birthYear');
-  for (let y = 2010; y >= 1950; y--) {
-    byEl.innerHTML += `<option value="${y}">${y}</option>`;
-  }
-  // 在留期限（年）
+  for (let y = 2010; y >= 1950; y--) byEl.innerHTML += `<option value="${y}">${y}</option>`;
   const vyEl = document.getElementById('visaYear');
-  for (let y = 2024; y <= 2035; y++) {
-    vyEl.innerHTML += `<option value="${y}">${y}</option>`;
-  }
-  // 月（共通）
+  for (let y = 2024; y <= 2035; y++) vyEl.innerHTML += `<option value="${y}">${y}</option>`;
   ['birthMonth','visaMonth'].forEach(id => {
     const el = document.getElementById(id);
-    for (let m = 1; m <= 12; m++) {
-      el.innerHTML += `<option value="${String(m).padStart(2,'0')}">${m}</option>`;
-    }
+    for (let m = 1; m <= 12; m++) el.innerHTML += `<option value="${String(m).padStart(2,'0')}">${m}</option>`;
   });
-  // 日（共通）
   ['birthDay','visaDay'].forEach(id => {
     const el = document.getElementById(id);
-    for (let d = 1; d <= 31; d++) {
-      el.innerHTML += `<option value="${String(d).padStart(2,'0')}">${d}</option>`;
-    }
+    for (let d = 1; d <= 31; d++) el.innerHTML += `<option value="${String(d).padStart(2,'0')}">${d}</option>`;
   });
 }
 initDateSelects();
+
+// ===== 永住者選択時に在留期限を非表示 =====
+function handleVisaChange() {
+  const visa = document.getElementById('visaStatus').value;
+  const group = document.getElementById('visaExpiryGroup');
+  if (visa === '永住者') {
+    group.style.display = 'none';
+    // 在留期限をクリア
+    ['visaYear','visaMonth','visaDay'].forEach(id => document.getElementById(id).value = '');
+  } else {
+    group.style.display = 'block';
+  }
+}
+
+// ===== 希望勤務地（地方）トグル =====
+const selectedRegions = new Set();
+function toggleRegion(el, region) {
+  if (region === '未定') {
+    // 未定選択時は他を全解除
+    const isSelected = el.classList.contains('selected');
+    document.querySelectorAll('#regionBtns .btn-select').forEach(b => b.classList.remove('selected'));
+    selectedRegions.clear();
+    if (!isSelected) {
+      el.classList.add('selected');
+      selectedRegions.add('未定');
+    }
+    updatePrefAreas();
+    hideErr('err-workRegion');
+    return;
+  }
+  // 未定を解除
+  document.querySelectorAll('#regionBtns .btn-select').forEach(b => {
+    if (b.textContent === '勤務地未定') b.classList.remove('selected');
+  });
+  selectedRegions.delete('未定');
+
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selectedRegions.delete(region);
+  } else {
+    el.classList.add('selected');
+    selectedRegions.add(region);
+  }
+  updatePrefAreas();
+  if (selectedRegions.size > 0) hideErr('err-workRegion');
+}
+
+function updatePrefAreas() {
+  const regions = ['北海道・東北','関東','中部','近畿','中国','四国','九州・沖縄'];
+  regions.forEach(r => {
+    const el = document.getElementById('pref-' + r);
+    if (el) {
+      if (selectedRegions.has(r)) el.classList.add('show');
+      else {
+        el.classList.remove('show');
+        // 非表示になった地方の都道府県選択をリセット
+        el.querySelectorAll('.btn-select').forEach(b => {
+          b.classList.remove('selected');
+          selectedPrefs.delete(b.textContent);
+        });
+      }
+    }
+  });
+}
+
+// ===== 希望都道府県トグル =====
+const selectedPrefs = new Set();
+function togglePref(el, pref) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selectedPrefs.delete(pref);
+  } else {
+    el.classList.add('selected');
+    selectedPrefs.add(pref);
+  }
+}
+
+// ===== 希望職種トグル =====
+const selectedOccs = new Set();
+function toggleOcc(el, occ) {
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selectedOccs.delete(occ);
+  } else {
+    el.classList.add('selected');
+    selectedOccs.add(occ);
+  }
+  if (selectedOccs.size > 0) hideErr('err-occupation');
+}
 
 // ===== ファイル管理 =====
 const fileStore = {};
@@ -747,9 +879,7 @@ function handleFile(key, input) {
   fileStore[key] = file;
   fileOpts[key]  = 'file';
   document.getElementById(key + '-name').textContent = file.name;
-  // ラジオボタンをリセット
   document.querySelectorAll(`input[name="${key}_opt"]`).forEach(r => r.checked = false);
-  // 画像プレビュー
   const preview = document.getElementById(key + '-preview');
   if (preview && file.type.startsWith('image/')) {
     const reader = new FileReader();
@@ -777,18 +907,13 @@ async function searchZip() {
     const data = await res.json();
     if (data.results) {
       const r = data.results[0];
-      // 都道府県セット
       const prefSel = document.getElementById('prefecture');
       for (let i = 0; i < prefSel.options.length; i++) {
         if (prefSel.options[i].value === r.address1) { prefSel.selectedIndex = i; break; }
       }
-      // 市区町村セット
-      document.getElementById('city').value = r.address2;
-      // 住所詳細はクリア
+      document.getElementById('city').value    = r.address2;
       document.getElementById('address').value = '';
-    } else {
-      alert('該当する住所が見つかりませんでした');
-    }
+    } else { alert('該当する住所が見つかりませんでした'); }
   } catch(e) { alert('住所検索に失敗しました'); }
 }
 
@@ -807,13 +932,8 @@ function showStep(n) {
   setProgress(n > 5 ? 5 : n);
   window.scrollTo(0,0);
 }
-
 function goBack(current) { showStep(current - 1); }
-
-function goNext(step) {
-  if (!validate(step)) return;
-  showStep(step + 1);
-}
+function goNext(step) { if (!validate(step)) return; showStep(step + 1); }
 
 // ===== バリデーション =====
 function showErr(id) { const el = document.getElementById(id); if(el) el.classList.add('show'); }
@@ -821,100 +941,84 @@ function hideErr(id) { const el = document.getElementById(id); if(el) el.classLi
 
 function validate(step) {
   let ok = true;
-
   if (step === 1) {
-    ['lastName','firstName','lastNameKana','firstNameKana','nationality','phone','email'].forEach(id => {
-      const val = document.getElementById(id).value.trim();
-      if (!val) { showErr('err-' + id); ok = false; } else { hideErr('err-' + id); }
+    ['lastName','firstName','lastNameKana','firstNameKana','phone','email'].forEach(id => {
+      if (!document.getElementById(id).value.trim()) { showErr('err-' + id); ok = false; } else { hideErr('err-' + id); }
     });
-    // メール形式
     const email = document.getElementById('email').value.trim();
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr('err-email'); ok = false; }
-    // 性別
     if (!document.querySelector('input[name="gender"]:checked')) { showErr('err-gender'); ok = false; } else { hideErr('err-gender'); }
-    // 生年月日
     if (!document.getElementById('birthYear').value || !document.getElementById('birthMonth').value || !document.getElementById('birthDay').value) {
       showErr('err-birthDate'); ok = false;
     } else { hideErr('err-birthDate'); }
+    if (!document.getElementById('nationality').value) { showErr('err-nationality'); ok = false; } else { hideErr('err-nationality'); }
   }
-
   if (step === 2) {
-    ['visaStatus','prefecture','city','address','zipCode'].forEach(id => {
-      const val = document.getElementById(id).value.trim();
-      if (!val) { showErr('err-' + id); ok = false; } else { hideErr('err-' + id); }
+    ['visaStatus','zipCode','prefecture','city','address'].forEach(id => {
+      if (!document.getElementById(id).value.trim()) { showErr('err-' + id); ok = false; } else { hideErr('err-' + id); }
     });
-    // 在留期限
-    if (!document.getElementById('visaYear').value || !document.getElementById('visaMonth').value || !document.getElementById('visaDay').value) {
-      showErr('err-visaExpiry'); ok = false;
-    } else { hideErr('err-visaExpiry'); }
+    // 永住者以外は在留期限必須
+    const visa = document.getElementById('visaStatus').value;
+    if (visa !== '永住者') {
+      if (!document.getElementById('visaYear').value || !document.getElementById('visaMonth').value || !document.getElementById('visaDay').value) {
+        showErr('err-visaExpiry'); ok = false;
+      } else { hideErr('err-visaExpiry'); }
+    }
   }
-
   if (step === 3) {
-    // 希望勤務地
-    if (!document.getElementById('workRegion').value) { showErr('err-workRegion'); ok = false; } else { hideErr('err-workRegion'); }
-    // 希望職種（1つ以上チェック）
-    const checked = document.querySelectorAll('input[name="occupation"]:checked');
-    if (checked.length === 0) { showErr('err-occupation'); ok = false; } else { hideErr('err-occupation'); }
+    if (selectedRegions.size === 0) { showErr('err-workRegion'); ok = false; } else { hideErr('err-workRegion'); }
+    if (selectedOccs.size === 0) { showErr('err-occupation'); ok = false; } else { hideErr('err-occupation'); }
   }
-
   if (step === 4) {
     ['photo','cardFront','cardBack','jlpt','ssw','resume'].forEach(key => {
       if (!fileStore[key] && !fileOpts[key]) { showErr('err-' + key); ok = false; } else { hideErr('err-' + key); }
     });
   }
-
   return ok;
 }
 
 // ===== 送信処理 =====
 async function submitForm() {
-  // 同意チェック
-  if (!document.getElementById('consentCheck').checked) {
-    showErr('err-consent'); return;
-  }
+  if (!document.getElementById('consentCheck').checked) { showErr('err-consent'); return; }
   hideErr('err-consent');
-
   const btn = document.getElementById('submitBtn');
   btn.textContent = '送信中... / Sending...';
   btn.disabled = true;
 
-  // 生年月日・在留期限を結合
-  const birthDate = `${document.getElementById('birthYear').value}-${document.getElementById('birthMonth').value}-${document.getElementById('birthDay').value}`;
-  const visaExpiry = `${document.getElementById('visaYear').value}-${document.getElementById('visaMonth').value}-${document.getElementById('visaDay').value}`;
-
-  // 希望職種（複数選択をカンマ区切り）
-  const occupations = Array.from(document.querySelectorAll('input[name="occupation"]:checked')).map(c => c.value).join('、');
+  const birthDate  = `${document.getElementById('birthYear').value}-${document.getElementById('birthMonth').value}-${document.getElementById('birthDay').value}`;
+  const visa = document.getElementById('visaStatus').value;
+  const visaExpiry = visa === '永住者'
+    ? '永住者につき期限なし'
+    : `${document.getElementById('visaYear').value}-${document.getElementById('visaMonth').value}-${document.getElementById('visaDay').value}`;
 
   const params = new URLSearchParams({
-    lastName:      document.getElementById('lastName').value.trim(),
-    firstName:     document.getElementById('firstName').value.trim(),
-    lastNameKana:  document.getElementById('lastNameKana').value.trim(),
-    firstNameKana: document.getElementById('firstNameKana').value.trim(),
-    gender:        document.querySelector('input[name="gender"]:checked')?.value || '',
+    lastName:       document.getElementById('lastName').value.trim(),
+    firstName:      document.getElementById('firstName').value.trim(),
+    lastNameKana:   document.getElementById('lastNameKana').value.trim(),
+    firstNameKana:  document.getElementById('firstNameKana').value.trim(),
+    gender:         document.querySelector('input[name="gender"]:checked')?.value || '',
     birthDate,
-    nationality:   document.getElementById('nationality').value.trim(),
-    zipCode:       document.getElementById('zipCode').value.trim(),
-    prefecture:    document.getElementById('prefecture').value,
-    city:          document.getElementById('city').value.trim(),
-    address:       document.getElementById('address').value.trim(),
-    phone:         document.getElementById('phone').value.trim(),
-    email:         document.getElementById('email').value.trim(),
-    visaStatus:    document.getElementById('visaStatus').value,
+    nationality:    document.getElementById('nationality').value,
+    zipCode:        document.getElementById('zipCode').value.trim(),
+    prefecture:     document.getElementById('prefecture').value,
+    city:           document.getElementById('city').value.trim(),
+    address:        document.getElementById('address').value.trim(),
+    phone:          document.getElementById('phone').value.trim(),
+    email:          document.getElementById('email').value.trim(),
+    visaStatus:     visa,
     visaExpiry,
-    workRegion:    document.getElementById('workRegion').value,
-    workPrefecture:document.getElementById('workPrefecture').value,
-    occupation:    occupations,
-    notes:         document.getElementById('notes').value.trim(),
+    workRegion:     Array.from(selectedRegions).join('、'),
+    workPrefecture: Array.from(selectedPrefs).join('、'),
+    occupation:     Array.from(selectedOccs).join('、'),
+    notes:          document.getElementById('notes').value.trim(),
   });
 
-  // ファイルをBase64変換して追加
   const fileKeys = ['photo','cardFront','cardBack','jlpt','ssw','resume'];
-  const filePromises = fileKeys.map(key => new Promise(resolve => {
+  await Promise.all(fileKeys.map(key => new Promise(resolve => {
     if (fileStore[key]) {
       const reader = new FileReader();
       reader.onload = e => {
-        const b64 = e.target.result.split(',')[1];
-        params.append(key + '_data', b64);
+        params.append(key + '_data', e.target.result.split(',')[1]);
         params.append(key + '_name', fileStore[key].name);
         params.append(key + '_type', fileStore[key].type);
         resolve();
@@ -925,9 +1029,7 @@ async function submitForm() {
       if (fileOpts[key] === 'none')  params.append(key + '_none',  'true');
       resolve();
     }
-  }));
-
-  await Promise.all(filePromises);
+  })));
 
   try {
     await fetch(GAS_URL, { method: 'POST', body: params });
