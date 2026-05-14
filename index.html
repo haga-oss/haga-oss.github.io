@@ -38,10 +38,11 @@
       transition: border .2s;
       box-sizing: border-box;
     }
-    /* ★修正1: date入力のはみ出し・左寄せ対応 */
+    /* ★修正: date入力の高さ・左寄せ・はみ出し完全対応 */
     .form-group input[type=date] {
       width: 100%;
       max-width: 100%;
+      min-height: 44px;
       padding: 10px 14px;
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -54,6 +55,13 @@
       display: block;
       appearance: none;
       -webkit-appearance: none;
+      background-color: #fff;
+      color: #333;
+      line-height: 1.5;
+    }
+    .form-group input[type=date]::-webkit-date-and-time-value {
+      text-align: left;
+      margin: 0;
     }
     .form-group input:focus,
     .form-group select:focus,
@@ -64,7 +72,7 @@
     .radio-group label { font-weight: 400; display: flex; align-items: center; gap: 6px; cursor: pointer; }
     .zip-row { display: flex; gap: 8px; align-items: flex-end; }
     .zip-row input { flex: 1; min-width: 0; }
-    .zip-btn { padding: 10px 16px; background: #ff6b35; color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+    .zip-btn { padding: 10px 16px; background: #ff6b35; color: #fff; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; white-space: nowrap; flex-shrink: 0; min-height: 44px; }
     .zip-btn:hover { background: #e05a28; }
     .file-block { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid #f0f0f0; }
     .file-block:last-child { border-bottom: none; }
@@ -97,9 +105,28 @@
     .btn-back { padding: 14px 20px; background: #f0f0f0; color: #555; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; }
     .btn-back:hover { background: #e0e0e0; }
     .btn-submit { flex: 1; padding: 14px; background: linear-gradient(90deg,#2ecc71,#27ae60); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; }
-    .consent-box { background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; font-size: 12px; line-height: 1.8; color: #555; max-height: 200px; overflow-y: auto; margin-bottom: 16px; }
-    .consent-check { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
-    .consent-check input { margin-top: 3px; width: 16px; height: 16px; }
+    /* ★個人情報同意ボックス */
+    .consent-box {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 11px;
+      line-height: 1.9;
+      color: #444;
+      max-height: 320px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+    .consent-box h3 { font-size: 13px; font-weight: 700; margin: 12px 0 6px; color: #1a1a1a; }
+    .consent-box h3:first-child { margin-top: 0; }
+    .consent-box p { margin-bottom: 6px; }
+    .consent-box ol { padding-left: 18px; margin-bottom: 8px; }
+    .consent-box ol li { margin-bottom: 4px; }
+    .consent-box .info-block { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px 12px; margin-top: 10px; font-size: 11px; }
+    .consent-box .date-line { color: #888; font-size: 10px; margin-top: 8px; }
+    .consent-check { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; margin-top: 12px; }
+    .consent-check input { margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0; }
     #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
     #loading-overlay.show { display: flex; }
     .spinner { width: 48px; height: 48px; border: 5px solid #fff3; border-top-color: #ff6b35; border-radius: 50%; animation: spin .8s linear infinite; }
@@ -138,7 +165,7 @@
     <div class="progress-label" id="progressLabel">STEP 1 / 5</div>
   </div>
 
-  <!-- ========== STEP 1 基本情報 ========== -->
+  <!-- ========== STEP 1 ========== -->
   <div class="card" id="step1">
     <h2>基本情報 <span>Basic Information</span></h2>
     <p class="desc">※ は必須項目です。/ Fields marked ※ are required.</p>
@@ -260,7 +287,7 @@
     </div>
   </div>
 
-  <!-- ========== STEP 2 在留情報 ========== -->
+  <!-- ========== STEP 2 ========== -->
   <div class="card" id="step2" style="display:none">
     <h2>在留情報 <span>Residence Status</span></h2>
     <p class="desc">在留資格・在留期限を入力してください。</p>
@@ -299,7 +326,7 @@
     </div>
   </div>
 
-  <!-- ========== STEP 3 希望条件 ========== -->
+  <!-- ========== STEP 3 ========== -->
   <div class="card" id="step3" style="display:none">
     <h2>希望条件 <span>Work Preferences</span></h2>
     <p class="desc">希望勤務地・職種を選択してください。複数選択可能です。</p>
@@ -350,7 +377,6 @@
           <label><input type="checkbox" name="workPref" value="福島県"> 福島県</label>
         </div>
       </div>
-
       <div class="pref-panel" id="pref-kanto">
         <div class="pref-panel-title">▼ 都道府県を選択（複数可）</div>
         <div class="pref-checks">
@@ -363,7 +389,6 @@
           <label><input type="checkbox" name="workPref" value="神奈川県"> 神奈川県</label>
         </div>
       </div>
-
       <div class="pref-panel" id="pref-chubu">
         <div class="pref-panel-title">▼ 都道府県を選択（複数可）</div>
         <div class="pref-checks">
@@ -378,7 +403,6 @@
           <label><input type="checkbox" name="workPref" value="愛知県"> 愛知県</label>
         </div>
       </div>
-
       <div class="pref-panel" id="pref-kinki">
         <div class="pref-panel-title">▼ 都道府県を選択（複数可）</div>
         <div class="pref-checks">
@@ -391,7 +415,6 @@
           <label><input type="checkbox" name="workPref" value="和歌山県"> 和歌山県</label>
         </div>
       </div>
-
       <div class="pref-panel" id="pref-chugoku">
         <div class="pref-panel-title">▼ 都道府県を選択（複数可）</div>
         <div class="pref-checks">
@@ -406,7 +429,6 @@
           <label><input type="checkbox" name="workPref" value="高知県"> 高知県</label>
         </div>
       </div>
-
       <div class="pref-panel" id="pref-kyushu">
         <div class="pref-panel-title">▼ 都道府県を選択（複数可）</div>
         <div class="pref-checks">
@@ -422,7 +444,6 @@
       </div>
     </div>
 
-    <!-- ★修正3: 希望職種を日英混在の旧パターンに戻す -->
     <div class="form-group">
       <label>希望職種 Preferred Job Type <span class="req">※</span></label>
       <select id="occupation">
@@ -453,15 +474,11 @@
     </div>
   </div>
 
-  <!-- ========== STEP 4 書類アップロード ========== -->
+  <!-- ========== STEP 4 ========== -->
   <div class="card" id="step4" style="display:none">
     <h2>書類アップロード <span>Document Upload</span></h2>
-    <p class="desc">
-      ※ のついた書類は必須です。ファイルがない場合は「後日送付」を選択してください。<br>
-      顔写真 5MB・その他 2MB まで / Max: Photo 5MB, Others 2MB
-    </p>
+    <p class="desc">※ のついた書類は必須です。ファイルがない場合は「後日送付」を選択してください。<br>顔写真 5MB・その他 2MB まで / Max: Photo 5MB, Others 2MB</p>
 
-    <!-- 顔写真 -->
     <div class="file-block">
       <label class="title">顔写真 Profile Photo <span class="req">※</span></label>
       <div class="file-input-wrap">
@@ -471,9 +488,7 @@
         <input type="file" id="photo_camera" accept="image/*" capture="user" style="display:none" onchange="handlePhotoSelect(this)">
         <span class="file-name" id="photo-name">未選択 / Not selected</span>
       </div>
-      <div class="photo-preview" id="photo-preview">
-        <img id="photo-img" src="" alt="顔写真プレビュー">
-      </div>
+      <div class="photo-preview" id="photo-preview"><img id="photo-img" src="" alt="顔写真プレビュー"></div>
       <div class="option-checks">
         <div class="option-check-row">
           <input type="checkbox" id="photo_later" onchange="toggleOption('photo','photo_later','後日送付')">
@@ -483,7 +498,6 @@
       <div class="error-msg" id="err-photo">顔写真を添付するか「後日送付」を選択してください</div>
     </div>
 
-    <!-- 在留カード表 -->
     <div class="file-block">
       <label class="title">在留カード（表） Residence Card Front <span class="req">※</span></label>
       <div class="file-input-wrap">
@@ -500,7 +514,6 @@
       <div class="error-msg" id="err-cardFront">在留カード（表）を添付するか「後日送付」を選択してください</div>
     </div>
 
-    <!-- 在留カード裏 -->
     <div class="file-block">
       <label class="title">在留カード（裏） Residence Card Back <span class="req">※</span></label>
       <div class="file-input-wrap">
@@ -517,7 +530,6 @@
       <div class="error-msg" id="err-cardBack">在留カード（裏）を添付するか「後日送付」を選択してください</div>
     </div>
 
-    <!-- JLPT -->
     <div class="file-block">
       <label class="title">JLPT 日本語能力試験証明書 <span class="opt">任意</span></label>
       <div class="file-input-wrap">
@@ -537,7 +549,6 @@
       </div>
     </div>
 
-    <!-- 特定技能評価証明書 -->
     <div class="file-block">
       <label class="title">特定技能評価証明書 SSW Certificate <span class="opt">任意</span></label>
       <div class="file-input-wrap">
@@ -557,7 +568,6 @@
       </div>
     </div>
 
-    <!-- 履歴書 -->
     <div class="file-block">
       <label class="title">履歴書 Resume / CV <span class="req">※</span></label>
       <div class="file-input-wrap">
@@ -583,12 +593,110 @@
   <!-- ========== STEP 5 同意・送信 ========== -->
   <div class="card" id="step5" style="display:none">
     <h2>個人情報の取り扱い <span>Privacy Policy</span></h2>
+
     <div class="consent-box">
-      <p>株式会社TRYBALUNIT（以下「当社」）は、本フォームにて取得する個人情報を以下の目的で利用します。</p><br>
-      <p>【利用目的】求職者の就業支援・人材紹介サービスの提供、就業先企業への情報提供、各種連絡・書類送付</p><br>
-      <p>【第三者提供】法令に基づく場合を除き、本人の同意なく第三者に提供しません。</p><br>
-      <p>【お問い合わせ】個人情報の開示・訂正・削除はinfo@trybalunit.comまでご連絡ください。</p>
+      <h3>【個人情報の取り扱いについて】</h3>
+      <h3>個人情報保護方針</h3>
+      <p>当社は、当社が業務上で使用する依頼者･取引関係者等の個人情報について、個人情報保護に関する法令及びその他の規範を遵守し、かつ国際的な動向にも配慮して自主的なルール及び体制を確立し、以下のとおり個人情報保護方針を定め、国民の権利擁護に寄与するため、これを実行し維持することを宣言いたします。</p>
+      <p>記</p>
+      <ol>
+        <li>当社役職員、その他関係者に個人情報の重要性を周知徹底させ、継続的に教育･監督・見直しを実施します。</li>
+        <li>情報入手に当たっては、個人情報の本人から同意を得ることを原則とします。</li>
+        <li>個人情報を不正な方法により入手しません。</li>
+        <li>当社は、業務遂行のために必要な範囲内で利用目的を明確に定め、適切に個人情報の取得、利用及び提供を行います。取得した個人情報は収集目的の範囲内で、担当者のみが、業務上必要な範囲においてのみ利用し、目的外利用を行わないための処置を講じます。</li>
+        <li>当社は、個人情報を正確かつ最新の状態に保つとともに、個人情報への不正アクセス、個人情報の紛失、破壊、改ざんおよび漏えい等の防止及び是正・予防に努めます。</li>
+        <li>当社は、ご依頼者からの個人情報に関するお問い合わせ、苦情、開示等のご請求に誠実かつ迅速に対応します。</li>
+        <li>当社は、個人情報をご依頼者に明示した利用目的の範囲内で取り扱います。また、当社はご依頼者からご提供いただいた個人情報を、ご依頼者の同意がある場合または正当な理由がある場合を除き、第三者に開示または提供しません。</li>
+        <li>当社は、個人情報保護法および関連するその他の法令、国が定める指針その他規範を遵守します。</li>
+        <li>当社は『個人情報保護マネジメントシステム（以下、当社規程）』を構築し着実に実施し、維持するとともに、継続的な改善に努めます。</li>
+        <li>ご依頼者またはご相談者等以外への相談･依頼等の内容については口外しません。</li>
+        <li>ご相談者・ご依頼者等への連絡は、原則として指定された連絡先以外には致しません。</li>
+        <li>ご相談･ご依頼等により受け取った帳票･記録の保管管理ならびに廃棄処分については、責任をもって行います。</li>
+      </ol>
+      <p class="date-line">制定：2018年４月１日　改訂：2022年４月１日　改訂：2023年３月１日<br>株式会社トライバルユニット　代表取締役社長　田中　智幸</p>
+
+      <h3>個人情報の取扱いに関して</h3>
+      <h3>提供するサービスの概要</h3>
+      <p>人材派遣事業、BPO事業、オフィスリースサポート事業、システム開発・販売事業</p>
+
+      <h3>取得する個人情報とその取得方法</h3>
+      <p><strong>A. 取得する個人情報</strong></p>
+      <p>ア. 顧客情報（会社名、部署名、氏名、住所、電話番号、メールアドレスなど）<br>
+      イ. 従業者情報（氏名、年齢、住所、電話番号、職歴、家族構成など）<br>
+      ウ. 従業者などの個人番号<br>
+      エ. 求人応募者情報（氏名、年齢、住所、電話番号、メールアドレス、職歴など）</p>
+      <p><strong>B. 取得方法</strong></p>
+      <p>ア. 直接本人より書面にて取得 / Webフォームによる取得<br>
+      イ. 直接本人より書面にて取得<br>
+      ウ. 本人確認のもと、直接本人もしくは代理人より取得</p>
+
+      <h3>個人情報の利用目的</h3>
+      <p>当社は、個人情報を次の利用目的の範囲内で利用することを、個人情報の保護に関する法律（個人情報保護法）第18条第1項及びJIS Q 15001:2017に基づき公表します。なお、予め明示・公表した利用目的の範囲を超えて、ご依頼者等の個人情報を利用する必要が生じた場合は、ご依頼者等にその旨をご連絡し、ご依頼者等の同意をいただいた上で利用します。</p>
+      <p>（顧客情報）</p>
+      <ol>
+        <li>業務におけるサービスの問合せ、製品のお届け、製品の製作。</li>
+        <li>業務における製品・サービス・催し物のご案内の送付。</li>
+      </ol>
+      <p>（従業者情報）</p>
+      <ol>
+        <li>人事労務管理（人事評価、配置（出向、転籍を含む）、研修、採用、を含む）</li>
+        <li>賃金管理（給与・一時金の決定、退職金の支払い、を含む）</li>
+        <li>健康管理（健康診断、保健指導、を含む）</li>
+        <li>福利厚生業務（財形貯蓄、当社製品割引斡旋、を含む）</li>
+        <li>セキュリティ管理（防犯、防災、労働安全衛生を含む）</li>
+        <li>業務管理（業務の連絡、各種報告書作成、グループウェアなどへの掲示、を含む）</li>
+      </ol>
+      <p>（従業者の個人番号）</p>
+      <ol>
+        <li>年金の資格取得･確認、給付を受ける際に利用。</li>
+        <li>雇用保険等の資格取得・確認、給付を受ける際に利用。ハローワーク等の事務等に利用。</li>
+        <li>医療保険等の保険料徴収等の医療保険者における手続、福祉分野の給付、生活保護の実施等、低所得者対策の事務等に利用。</li>
+        <li>国民が税務当局に提出する確定申告書、届出書、調書等に記載。当局の内部事務等に利用。</li>
+        <li>上記の他、社会保障、地方税、防災に関する事務その他これらに類する事務であって地方公共団体が条例で定める事務に利用。</li>
+      </ol>
+      <p>（求人、派遣登録応募者情報）</p>
+      <ol><li>採用活動に利用</li></ol>
+
+      <h3>個人情報の提供</h3>
+      <p>当社は、次の場合を除き、ご依頼者の個人情報を第三者に開示または提供しません。</p>
+      <ol>
+        <li>ご依頼者の同意がある場合</li>
+        <li>法令に基づく場合</li>
+        <li>人の生命、身体又は財産の保護に必要であって、ご依頼者の同意を取ることが困難な場合</li>
+        <li>利用目的の達成に必要な範囲で、個人情報の取り扱いを委託する場合</li>
+        <li>合併、会社分割、営業譲渡その他の事由によって事業の承継が行われる場合</li>
+      </ol>
+
+      <h3>個人情報の開示等</h3>
+      <p>当社は、開示対象個人情報について、次の事項をご対応させていただいておりますので、ご請求がございましたら弊社、苦情相談窓口までお問合せ下さい。</p>
+      <ol>
+        <li>利用目的の通知の請求</li>
+        <li>開示の請求</li>
+        <li>内容の訂正の請求</li>
+        <li>追加又は削除の請求</li>
+        <li>利用の停止の請求</li>
+        <li>削除及び第三者への提供の停止の請求</li>
+      </ol>
+
+      <h3>個人情報に関するお問合せ</h3>
+      <p>ご依頼者ご自身の個人情報について、また個人情報保護方針全般に関するお問い合わせなどがございましたら、弊社、苦情相談窓口までお問合せ下さい。</p>
+
+      <div class="info-block">
+        <p><strong>【苦情相談窓口】</strong><br>
+        株式会社トライバルユニット<br>
+        個人情報保護管理者：小山　篤<br>
+        TEL：011-200-5111　Mail：info@trybalunit.com</p>
+        <p style="margin-top:8px"><strong>【当社認定団体の苦情相談窓口】</strong><br>
+        一般財団法人日本情報経済社会推進協会　認定個人情報保護団体事務局<br>
+        〒106-0032 東京都港区六本木一丁目９番９号 六本木ファーストビル内<br>
+        TEL：03-5860-7565（受付時間　平日(月～金) 9:30～12:00 , 13:00～16:30）</p>
+        <p style="margin-top:8px">株式会社トライバルユニット<br>
+        北海道札幌市中央区北一条西3丁目3番地1<br>
+        代表取締役社長　田中　智幸<br>
+        最終更新：2024年9月1日</p>
+      </div>
     </div>
+
     <div class="consent-check">
       <input type="checkbox" id="consent">
       <label for="consent">上記の個人情報の取り扱いに同意します。<br>I agree to the privacy policy above.</label>
@@ -630,7 +738,6 @@ async function lookupZip() {
       for (let i = 0; i < prefSel.options.length; i++) {
         if (prefSel.options[i].value === r.address1) { prefSel.selectedIndex = i; break; }
       }
-      // ★市区町村にaddress2のみセット（address3は住所詳細へ）
       document.getElementById('city').value = r.address2;
       document.getElementById('address').value = r.address3 || '';
     } else {
@@ -725,7 +832,7 @@ function toggleUndecided(checked) {
 
 function validateStep(step) {
   let ok = true;
-  const show = id => { const el = document.getElementById(id); if(el) { el.classList.add('show'); ok = false; } };
+  const show = id => { const el = document.getElementById(id); if(el){ el.classList.add('show'); ok = false; } };
   const hide = id => { const el = document.getElementById(id); if(el) el.classList.remove('show'); };
 
   if (step === 1) {
@@ -866,7 +973,6 @@ async function submitForm() {
   }
 }
 
-// スマホのみカメラボタン表示
 (function() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   if (!isMobile) {
